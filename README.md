@@ -1,5 +1,3 @@
-<a name="english"></a>
-[[한국어]](#korean)
 RAOP
 =======
 
@@ -7,20 +5,16 @@ Contributor
 --
 @javarouka(@YiHanghee)
 
+<a name="english"></a>
+[[한국어]](#korean)
+
 Introduce
 --
 RAOP is a simple JavaScript library that provides an object-based AOP.
 
-
-<br/>
-<br/>
-<br/>
-
-<a name="korean"></a>
-# for korean
-[[English]](#english)
-RAOP
 =======
+<a name="korean"></a>
+[[English]](#english)
 
 소개
 --
