@@ -116,25 +116,49 @@
 
   // AOP =========================================================
 
+  var JoinPoint = {
+    BEFORE: function(target, todo, advice, args) {
+      advice.apply(target, args);
+      todo.apply(target, args);
+    },
+    AFTER: function(target, todo, advice, args) {
+      todo.apply(target, args);
+      advice.apply(target, args);
+    },
+    AROUND: function(target, todo, advice, args) {
+      args.unshift(todo);
+      advice.apply(target, args);
+    },
+    EXCEPTION: function(target, todo, advice, args) {
+      try {
+        todo.apply(target, args);
+      }
+      catch(exception) {
+        args.unshift(exception);
+        advice.apply(target, args);
+      }
+    }
+  };
+
   var Pointcut = function(exprssion) {
   };
 
   var Advise = function(action) {
   };
 
-  var waeve = function(obj, pointcut, action) {
+  var join = function(target, todo, joinPoint, advice) {
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      joinPoint(target, todo, advice, args);
+    };
+  };
+
+  var waeve = function(obj, pointcut, joinPoint, advice) {
     var keys = Object.keys(obj);
     keys.forEach(function(val/*,i, me*/) {
       var p = obj[val];
       if(raop.isFunction(p) && pointcut.test(val)) {
-        obj[val] = function() {
-          var args = Array.prototype.slice.call(arguments);
-          action(
-            function(c, a) {
-              p.apply(c || obj, a || args);
-            }, obj, args
-          );
-        };
+        obj[val] = join(obj, p, joinPoint, advice);
       }
     });
   };
@@ -143,7 +167,8 @@
   raop.Aspect = {
     Pointcut: Pointcut,
     Advise: Advise,
-    weave: waeve
+    weave: waeve,
+    JoinPoint: JoinPoint
   };
 
   // AOP end =========================================================

@@ -16,10 +16,14 @@ var obj = {
 raop.Aspect.weave(
   obj,
   /^(a+|c+)/,
-  function(act) {
-    act();
-    console.log("Advice execute!");
+  raop.Aspect.JoinPoint.AFTER,
+  function(args) {
+    console.log("Advice execute!", args);
   }
+//  function(act) {
+//    act();
+//    console.log("Advice execute!");
+//  }
 );
 
 obj.a("첫번째 인자입니다" ,"두번째 인자입니다");
