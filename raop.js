@@ -8,23 +8,25 @@
   Object.keys = Object.keys || function(obj) {
     var ret = [];
     for(var k in obj) {
-      if(!ownKey.call(obj, k)) continue;
+      if(!ownKey.call(obj, k)) {
+        continue;
+      }
       ret.push(k);
     }
     return ret;
   };
 
   Object.create = Object.create || function(obj) {
-    var object = function(){};
-    object.prototype = obj;
-    return new object();
+    var O = function(){};
+    O.prototype = obj;
+    return new O();
   };
 
   if(!Array.prototype.forEach) {
     Array.prototype.forEach = function forEach( callback, thisArg ) {
       var T, k;
       if ( this == null ) {
-        throw new TypeError( "this is null or not defined" );
+        throw new TypeError("this is null or not defined");
       }
       var O = Object(this);
       var len = O.length >>> 0;
@@ -62,16 +64,17 @@
 
   var types = [ 'Function', 'Number', 'String', 'Boolean', 'Array', 'Date', 'RegExp' ],
       ownKey = Object.prototype.hasOwnProperty,
-      toString = Object.prototype.toString;
+      toString = Object.prototype.toString,
+      checker = function(type) {
+        raop['is' + type] = function(obj) {
+          return toString.call(obj) === '[object ' + type + ']';
+        };
+      };
   for(var t = 0,len = types.length; t < len; t++) {
-    (function(type) {
-      raop['is' + type] = function(obj) {
-        return toString.call(obj) === '[object ' + type + ']';
-      }
-    })(types[t]);
+    checker(types[t]);
   }
   raop.isArray = Array.isArray || function(obj) {
-    return toString.call(obj) === '[object Array]'
+    return toString.call(obj) === '[object Array]';
   };
   raop.isObject = function(obj) {
     return obj === Object(obj);
@@ -91,7 +94,9 @@
     else if(raop.isObject(obj)) {
       var k;
       for(k in obj) {
-        if(!ownKey.call(obj, k)) continue;
+        if(!ownKey.call(obj, k)) {
+          continue;
+        }
         iter.call(obj, obj[k], k);
       }
     }
@@ -111,30 +116,36 @@
 
   // AOP =========================================================
 
-  raop.Pointcut = function(exprssion) {
+  var Pointcut = function(exprssion) {
   };
 
-  raop.Advise = function(action) {
+  var Advise = function(action) {
   };
+
+  var waeve = function(obj, pointcut, action) {
+    var keys = Object.keys(obj);
+    keys.forEach(function(val/*,i, me*/) {
+      var p = obj[val];
+      if(raop.isFunction(p) && pointcut.test(val)) {
+        obj[val] = function() {
+          var args = Array.prototype.slice.call(arguments);
+          action(
+            function(c, a) {
+              p.apply(c || obj, a || args);
+            }, obj, args
+          );
+        };
+      }
+    });
+  };
+
 
   raop.Aspect = {
-    weave: function(obj, pointcut, action) {
-      var keys = Object.keys(obj);
-      keys.forEach(function(val/*,i, me*/) {
-        var p = obj[val];
-        if(raop.isFunction(p) && pointcut.test(val)) {
-          obj[val] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            action(
-              function(c, a) {
-                p.apply(c || obj, a || args);
-              }, obj, args
-            );
-          }
-        }
-      });
-    }
+    Pointcut: Pointcut,
+    Advise: Advise,
+    weave: waeve
   };
+
   // AOP end =========================================================
 
 })(this);

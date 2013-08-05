@@ -5,7 +5,7 @@
  * Time: 오후 4:13
  * To change this template use File | Settings | File Templates.
  */
-var raop = require("./../roux.js");
+var raop = require("./../raop.js");
 
 var obj = {
   a: function(v1, v2){ console.log("execute a " + v1 + "/"+ v2); },

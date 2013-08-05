@@ -1,0 +1,19 @@
+{
+  "name": "raop",
+  "version": "0.10.0",
+  "description": "",
+  "main": "raop.js",
+  "dependencies": {
+    "grunt": "~0.4.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "*"
+  },
+  "repository": "https://github.com/javarouka/raop.js.git",
+  "author": "javarouka@gmail.com",
+  "license": "MIT"
+}
