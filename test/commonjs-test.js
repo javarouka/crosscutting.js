@@ -1,9 +1,7 @@
 /**
- * Created with JetBrains WebStorm.
  * User: javarouka
  * Date: 13. 6. 28
  * Time: 오후 4:13
- * To change this template use File | Settings | File Templates.
  */
 var raop = require("./../raop.js");
 
@@ -16,7 +14,7 @@ var obj = {
 raop.Aspect.weave(
   obj,
   /^(a+|c+)/,
-  raop.Aspect.JoinPoint.AFTER,
+  raop.Aspect.AdviceType.AFTER,
   function(args) {
     console.log("Advice execute!", args);
   }

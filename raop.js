@@ -116,7 +116,7 @@
 
   // AOP =========================================================
 
-  var JoinPoint = {
+  var AdviceType = {
     BEFORE: function(target, todo, advice, args) {
       advice.apply(target, args);
       todo.apply(target, args);
@@ -140,25 +140,27 @@
     }
   };
 
+  // TODO: 구현 필요
   var Pointcut = function(exprssion) {
+    return exprssion;
   };
 
-  var Advise = function(action) {
+  var Advise = function(action, type) {
   };
 
-  var join = function(target, todo, joinPoint, advice) {
+  var cut = function(target, todo, type, advice) {
     return function() {
       var args = Array.prototype.slice.call(arguments);
-      joinPoint(target, todo, advice, args);
+      type(target, todo, advice, args);
     };
   };
 
-  var waeve = function(obj, pointcut, joinPoint, advice) {
+  var waeve = function(obj, pointcut, type, advice) {
     var keys = Object.keys(obj);
     keys.forEach(function(val/*,i, me*/) {
       var p = obj[val];
       if(raop.isFunction(p) && pointcut.test(val)) {
-        obj[val] = join(obj, p, joinPoint, advice);
+        obj[val] = cut(obj, p, type, advice);
       }
     });
   };
@@ -168,7 +170,7 @@
     Pointcut: Pointcut,
     Advise: Advise,
     weave: waeve,
-    JoinPoint: JoinPoint
+    AdviceType: AdviceType
   };
 
   // AOP end =========================================================
