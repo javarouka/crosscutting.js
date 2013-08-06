@@ -10,6 +10,7 @@ module.exports = function(grunt) {
         'raop.js'
       ],
       buildDirPath = "build/",
+      taskOrder = ['jshint', 'connect', 'nodeunit', 'qunit', 'uglify'],
       banner = '/* <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n';
 
   grunt.initConfig({
@@ -26,9 +27,29 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: sources,
-        tasks: [ 'jshint', 'uglify' ],
+        tasks: taskOrder,
         options: {
           interrupt: true
+        }
+      }
+    },
+    nodeunit: {
+      all: ['test/**/*-test.js']
+    },
+    qunit: {
+      all: {
+        options: {
+          urls: [
+            'http://localhost:8000/test/raop.html'
+          ]
+        }
+      }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 8000,
+          base: '.'
         }
       }
     },
@@ -51,6 +72,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
-  grunt.registerTask('default', ['jshint, uglify']);
+  grunt.registerTask('default', taskOrder);
 };
