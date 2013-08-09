@@ -1,8 +1,15 @@
-/**
- */
 (function(context) {
 
   "use strict";
+
+  var aSlice = [].slice,
+    argumentError = new Error("argument is invalid"),
+    adviceFunctionInvalidError =
+      new Error("advice function is invalid. It should be function type");
+
+  Object.freeze = Object.freeze || function(obj) {
+    return obj;
+  };
 
   // polyfill
   Object.keys = Object.keys || function(obj) {
@@ -22,34 +29,33 @@
     return new O();
   };
 
-  if(!Array.prototype.forEach) {
-    Array.prototype.forEach = function forEach( callback, thisArg ) {
-      var T, k;
-      if ( this == null ) {
-        throw new TypeError("this is null or not defined");
+  Array.prototype.forEach = Array.prototype.forEach || function ( callback, thisArg ) {
+    var T, k;
+    if ( this == null ) {
+      throw new TypeError("this is null or not defined");
+    }
+    var O = Object(this);
+    var len = O.length >>> 0;
+    if ({}.toString.call(callback) !== "[object Function]") {
+      throw new TypeError(callback + " is not a function");
+    }
+    if(thisArg) {
+      T = thisArg;
+    }
+    k = 0;
+    while(k < len) {
+      var kValue;
+      if (Object.prototype.hasOwnProperty.call(O, k) ) {
+        kValue = O[k];
+        callback.call( T, kValue, k, O );
       }
-      var O = Object(this);
-      var len = O.length >>> 0;
-      if ({}.toString.call(callback) !== "[object Function]") {
-        throw new TypeError(callback + " is not a function");
-      }
-      if(thisArg) {
-        T = thisArg;
-      }
-      k = 0;
-      while(k < len) {
-        var kValue;
-        if (Object.prototype.hasOwnProperty.call(O, k) ) {
-          kValue = O[k];
-          callback.call( T, kValue, k, O );
-        }
-        k++;
-      }
-    };
-  }
+      k++;
+    }
+  };
 
-  var root = context;
-  var raop = Object.create(null);
+  var root = context,
+    raop = Object.create(null);
+
   var preventConflictName = root.raop;
 
   if (typeof exports !== 'undefined') {
@@ -62,14 +68,14 @@
     root.raop = raop;
   }
 
-  var types = [ 'Function', 'Number', 'String', 'Boolean', 'Array', 'Date', 'RegExp' ],
-      ownKey = Object.prototype.hasOwnProperty,
-      toString = Object.prototype.toString,
-      checker = function(type) {
-        raop['is' + type] = function(obj) {
-          return toString.call(obj) === '[object ' + type + ']';
-        };
+  var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp' ],
+    ownKey = Object.prototype.hasOwnProperty,
+    toString = Object.prototype.toString,
+    checker = function(type) {
+      raop['is' + type] = function(obj) {
+        return toString.call(obj) === '[object ' + type + ']';
       };
+    };
   for(var t = 0,len = types.length; t < len; t++) {
     checker(types[t]);
   }
@@ -114,28 +120,45 @@
 
   // Object end =========================================================
 
+  // Utils ==============================================================
+
+  var argumentsToArray = function(args){
+    return aSlice.call(args);
+  };
+
+  // Utils end ==========================================================
+
   // AOP =========================================================
 
+  /**
+   * {
+   *    args: arguments,
+   *    target: target,
+   *    todo: todo,
+   *    advice: advice,
+   *    type: type
+   * }
+   */
   var AdviceType = {
-    BEFORE: function(target, todo, advice, args) {
-      advice.apply(target, args);
-      todo.apply(target, args);
+    BEFORE: function(options) {
+      options.advice.call(options.target, options);
+      return options.todo.apply(options.target, argumentsToArray(options.args));
     },
-    AFTER: function(target, todo, advice, args) {
-      todo.apply(target, args);
-      advice.apply(target, args);
+    AFTER: function(options) {
+      var v = options.todo.apply(options.target, argumentsToArray(options.args));
+      options.advice.call(options.target, options);
+      return v;
     },
-    AROUND: function(target, todo, advice, args) {
-      args.unshift(todo);
-      advice.apply(target, args);
+    AROUND: function(options) {
+      return options.advice.call(options.target, options);
     },
-    EXCEPTION: function(target, todo, advice, args) {
+    EXCEPTION: function(options) {
       try {
-        todo.apply(target, args);
+        return options.todo.apply(options.target, argumentsToArray(options.args));
       }
       catch(exception) {
-        args.unshift(exception);
-        advice.apply(target, args);
+        options.exception = exception;
+        return options.advice.call(options.target, options);
       }
     }
   };
@@ -150,13 +173,21 @@
 
   var cut = function(target, todo, type, advice) {
     return function() {
-      var args = Array.prototype.slice.call(arguments);
-      type(target, todo, advice, args);
+      return type({
+        args: arguments,
+        target: target,
+        todo: todo,
+        advice: advice,
+        type: type
+      });
     };
   };
 
-  var waeve = function(obj, pointcut, type, advice) {
+  var weave = function(obj, pointcut, type, advice) {
     var keys = Object.keys(obj);
+    if(raop.isString(type)) {
+      type = AdviceType[type.toUpperCase()];
+    }
     keys.forEach(function(val/*,i, me*/) {
       var p = obj[val];
       if(raop.isFunction(p) && pointcut.test(val)) {
@@ -169,9 +200,30 @@
   raop.Aspect = {
     Pointcut: Pointcut,
     Advise: Advise,
-    weave: waeve,
+    weave: weave,
     AdviceType: AdviceType
   };
+
+  // Argument Validation AOP
+  weave(
+    raop.Aspect,
+    /^weave$/,
+    raop.Aspect.AdviceType.BEFORE,
+    function(options) {
+      if(!options.args) {
+        throw argumentError;
+      }
+      if(!options.type) {
+        options.type = AdviceType.AROUND;
+      }
+      if(!raop.isFunction(options.advice)) {
+        throw adviceFunctionInvalidError;
+      }
+    }
+  );
+
+  // Freeze. Only ES 5+
+  Object.freeze(raop);
 
   // AOP end =========================================================
 

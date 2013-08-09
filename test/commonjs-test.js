@@ -5,29 +5,40 @@
  */
 var raop = require("./../raop.js");
 
-exports.testSomething = function(test){
+exports.testCheckExistProperties = function(test) {
+  test.ok(typeof raop.Aspect === 'object', "Aspect object exists");
+  test.ok(typeof raop.Aspect.weave === 'function', "Aspect weave method exists");
+  test.ok(typeof raop.Aspect.AdviceType === 'object', "Aspect AdviceType object exists");
+  test.done();
+};
+
+exports.testApplyAOPBasic = function(test) {
 
   var obj = {
-    a: function(v1, v2){ console.log("execute a " + v1 + "/"+ v2); },
-    b: function(v1, v2){ console.log("execute b " + v1 + "/"+ v2); },
-    c: function(v1, v2){ console.log("execute c " + v1 + "/"+ v2); }
+    a: function(one) {
+      return one;
+    },
+    b: function(two) {
+      return two;
+    },
+    c: function(three) {
+      return three;
+    }
   };
 
   raop.Aspect.weave(
     obj,
     /^(a+|c+)/,
-    raop.Aspect.AdviceType.AFTER,
-    function(args) {
-      console.log("Advice execute!", args);
+    raop.Aspect.AdviceType.BEFORE,
+    function(options) {
+      options.args[0] = 1000;
     }
   );
 
-  obj.a("첫번째 인자입니다" ,"두번째 인자입니다");
-  obj.b("첫번째 인자입니다" ,"두번째 인자입니다");
-  obj.c("첫번째 인자입니다" ,"두번째 인자입니다");
+  test.ok(obj.a(1) === 1000, "method a aop apply");
+  test.ok(obj.b(2) === 2, "method b aop no-apply");
+  test.ok(obj.c(3) === 1000, "method a aop apply");
 
-
-  test.ok(true, "this assertion should pass");
   test.done();
 };
 
