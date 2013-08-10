@@ -11,7 +11,12 @@ module.exports = function(grunt) {
       ],
       buildDirPath = "build/",
       taskOrder = ['jshint', 'connect', 'nodeunit', 'qunit', 'uglify'],
-      banner = '/* <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n';
+      banner = "/*\n <%= pkg.name %> JavaScript Library\n" +
+        " author: javarouka@gmail.com\n" +
+        " site: http://javarouka.github.io/raop.js\n" +
+        " license: MIT\n" +
+        " create date: <%= grunt.template.today('yyyy-mm-dd') %>\n" +
+        "*/\n";
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
