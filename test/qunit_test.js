@@ -11,7 +11,39 @@ test('exists test', function() {
   ok(true, 'this had better work.');
 });
 
-test("functional test", function(test) {
+test('around test', function() {
+  var obj = {
+    a: function(one) {
+      return one;
+    },
+    b: function(one) {
+      return one;
+    }
+  };
+
+  raop.Aspect.weave(
+    obj,
+    new raop.Aspect.Pointcut(/a/),
+    raop.Aspect.AdviceType.AROUND,
+    function(todo, options) {
+      return todo();
+    }
+  );
+
+  raop.Aspect.weave(
+    obj,
+    new raop.Aspect.Pointcut(/b/),
+    raop.Aspect.AdviceType.AROUND,
+    function(todo, options) {
+      return todo(100) + 1;
+    }
+  );
+
+  ok(obj.a(1) === 1, "method a aop apply");
+  ok(obj.b(100) === 101, "method b aop apply");
+});
+
+test("functional test", function() {
 
   var obj = {
     a: function(one) {

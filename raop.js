@@ -148,7 +148,16 @@
       return aValue || rValue;
     },
     "AROUND": function(options) {
-      return options.advice.call(options.target, options);
+      return options.advice.call(
+        options.target,
+        function() {
+          return options.todo.apply(
+            options.target,
+            argumentsToArray((arguments[0]) ? arguments : options.args)
+          );
+        },
+        options
+      );
     },
     "EXCEPTION": function(options) {
       try {
@@ -161,13 +170,23 @@
     }
   };
 
-  // TODO: 구현 필요
-  var Pointcut = function(exprssion) {
-    return exprssion;
+  var Pointcut = function(matcher) {
+    this.matcher = matcher;
+  };
+  Pointcut.prototype.isMatch = function(value) {
+    if(raop.isRegExp(this.matcher)) {
+      return this.matcher.test(value);
+    }
+    else if(raop.isFunction(this.matcher)) {
+      return this.matcher(value);
+    }
+    else {
+      throw argumentError;
+    }
   };
 
-  // TODO: 구현 필요
-  var Advise = function(action, type) {
+  var Advice = function(action) {
+    return action;
   };
 
   var cut = function(target, todo, type, advice) {
@@ -187,9 +206,9 @@
     if(raop.isString(type)) {
       type = AdviceType[type.toUpperCase()];
     }
-    keys.forEach(function(val/*,i, me*/) {
+    keys.forEach(function(val) {
       var p = obj[val];
-      if(raop.isFunction(p) && pointcut.test(val)) {
+      if(raop.isFunction(p) && pointcut.isMatch(val)) {
         obj[val] = cut(obj, p, type, advice);
       }
     });
@@ -197,7 +216,7 @@
 
   raop.Aspect = {
     Pointcut: Pointcut,
-    Advise: Advise,
+    Advice: Advice,
     weave: weave,
     AdviceType: AdviceType
   };
@@ -205,17 +224,22 @@
   // Argument Validation AOP
   weave(
     raop.Aspect,
-    /^weave$/,
+    new Pointcut(/^weave$/),
     raop.Aspect.AdviceType.BEFORE,
     function(options) {
-      if(!options.args) {
+      if(!options.args || options.args.length < 3) {
         throw argumentError;
       }
-      if(!options.type) {
-        options.type = AdviceType.AROUND;
+      if(!raop.isObject(options.args[0])) {
+        throw argumentError;
       }
       if(!raop.isFunction(options.advice)) {
         throw adviceFunctionInvalidError;
+      }
+      options.advice = new Advice(options.advice);
+      // if second arguments is not Pointcut object, transform it.
+      if(!(options.args[1] instanceof Pointcut)) {
+        options.args[1] = new Pointcut(options.args[1]);
       }
     }
   );

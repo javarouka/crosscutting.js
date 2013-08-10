@@ -12,6 +12,40 @@ exports.testCheckExistProperties = function(test) {
   test.done();
 };
 
+exports.testAroundType = function(test) {
+
+  var obj = {
+    a: function(one) {
+      return one;
+    },
+    b: function(one) {
+      return one;
+    }
+  };
+
+  raop.Aspect.weave(
+    obj,
+    new raop.Aspect.Pointcut(/a/),
+    raop.Aspect.AdviceType.AROUND,
+    function(todo, options) {
+      return todo();
+    }
+  );
+
+  raop.Aspect.weave(
+    obj,
+    new raop.Aspect.Pointcut(/b/),
+    raop.Aspect.AdviceType.AROUND,
+    function(todo, options) {
+      return todo(100) + 1;
+    }
+  );
+
+  test.ok(obj.a(1) === 1, "method a aop apply");
+  test.ok(obj.b(100) === 101, "method b aop apply");
+  test.done();
+};
+
 exports.testApplyAOPBasic = function(test) {
 
   var obj = {
