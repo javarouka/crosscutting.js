@@ -3,15 +3,16 @@
   "use strict";
 
   var aSlice = [].slice,
+    ownKey = Object.prototype.hasOwnProperty,
+    toString = Object.prototype.toString,
     argumentError = new Error("argument is invalid"),
     adviceFunctionInvalidError =
       new Error("advice function is invalid. It should be function type");
 
+  // polyfill
   Object.freeze = Object.freeze || function(obj) {
     return obj;
   };
-
-  // polyfill
   Object.keys = Object.keys || function(obj) {
     var ret = [];
     for(var k in obj) {
@@ -22,13 +23,11 @@
     }
     return ret;
   };
-
   Object.create = Object.create || function(obj) {
     var O = function(){};
     O.prototype = obj;
     return new O();
   };
-
   Array.prototype.forEach = Array.prototype.forEach || function ( callback, thisArg ) {
     var T, k;
     if ( this == null ) {
@@ -36,7 +35,7 @@
     }
     var O = Object(this);
     var len = O.length >>> 0;
-    if ({}.toString.call(callback) !== "[object Function]") {
+    if (toString.call(callback) !== "[object Function]") {
       throw new TypeError(callback + " is not a function");
     }
     if(thisArg) {
@@ -45,7 +44,7 @@
     k = 0;
     while(k < len) {
       var kValue;
-      if (({}).hasOwnProperty.call(O, k) ) {
+      if (ownKey.call(O, k) ) {
         kValue = O[k];
         callback.call( T, kValue, k, O );
       }
@@ -69,8 +68,6 @@
   }
 
   var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp' ],
-    ownKey = Object.prototype.hasOwnProperty,
-    toString = Object.prototype.toString,
     checker = function(type) {
       raop['is' + type] = function(obj) {
         return toString.call(obj) === '[object ' + type + ']';
@@ -131,29 +128,29 @@
   // AOP =========================================================
 
   /**
-   * {
-   *    args: arguments,
-   *    target: target,
-   *    todo: todo,
-   *    advice: advice,
-   *    type: type
+   * options = {
+   *    args: arguments, // function "Arguments" object
+   *    target: target, // context(this) object
+   *    todo: todo, // aop target function
+   *    advice: advice, // advice function
+   *    type: type // advice type
    * }
    */
   var AdviceType = {
-    BEFORE: function(options) {
+    "BEFORE": function(options) {
       var aValue = options.advice.call(options.target, options);
       var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
       return aValue || rValue;
     },
-    AFTER: function(options) {
+    "AFTER": function(options) {
       var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
       var aValue = options.advice.call(options.target, options);
       return aValue || rValue;
     },
-    AROUND: function(options) {
+    "AROUND": function(options) {
       return options.advice.call(options.target, options);
     },
-    EXCEPTION: function(options) {
+    "EXCEPTION": function(options) {
       try {
         return options.todo.apply(options.target, argumentsToArray(options.args));
       }
@@ -169,6 +166,7 @@
     return exprssion;
   };
 
+  // TODO: 구현 필요
   var Advise = function(action, type) {
   };
 
@@ -196,7 +194,6 @@
       }
     });
   };
-
 
   raop.Aspect = {
     Pointcut: Pointcut,
