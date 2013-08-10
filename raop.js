@@ -45,7 +45,7 @@
     k = 0;
     while(k < len) {
       var kValue;
-      if (Object.prototype.hasOwnProperty.call(O, k) ) {
+      if (({}).hasOwnProperty.call(O, k) ) {
         kValue = O[k];
         callback.call( T, kValue, k, O );
       }
@@ -141,13 +141,14 @@
    */
   var AdviceType = {
     BEFORE: function(options) {
-      options.advice.call(options.target, options);
-      return options.todo.apply(options.target, argumentsToArray(options.args));
+      var aValue = options.advice.call(options.target, options);
+      var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
+      return aValue || rValue;
     },
     AFTER: function(options) {
-      var v = options.todo.apply(options.target, argumentsToArray(options.args));
-      options.advice.call(options.target, options);
-      return v;
+      var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
+      var aValue = options.advice.call(options.target, options);
+      return aValue || rValue;
     },
     AROUND: function(options) {
       return options.advice.call(options.target, options);
