@@ -23,7 +23,7 @@ exports.testAroundType = function(test) {
     }
   };
 
-  raop.Aspect.weave(
+  raop.weave(
     obj,
     new raop.Aspect.Pointcut(/a/),
     raop.Aspect.AdviceType.AROUND,
@@ -32,7 +32,7 @@ exports.testAroundType = function(test) {
     }
   );
 
-  raop.Aspect.weave(
+  raop.weave(
     obj,
     new raop.Aspect.Pointcut(/b/),
     raop.Aspect.AdviceType.AROUND,
@@ -60,7 +60,7 @@ exports.testApplyAOPBasic = function(test) {
     }
   };
 
-  raop.Aspect.weave(
+  raop.weave(
     obj,
     /^(a+|c+)/,
     raop.Aspect.AdviceType.BEFORE,
@@ -76,6 +76,32 @@ exports.testApplyAOPBasic = function(test) {
   test.done();
 };
 
+exports.t = function(test) {
+
+  var calculator = {
+    plus: function(a, b) {
+      return a + b;
+    },
+    minus: function(a, b) {
+      return a - b;
+    }
+  };
+  var logAdvice = function(options) {
+    console.log("calc " + options.method + " execute");
+  };
+  calculator = raop.weave(
+    calculator,
+    function() {
+      return true;
+    },
+    raop.Aspect.AdviceType.BEFORE,
+    logAdvice
+  );
+  var result = calculator.plus(1, 1);
+
+  test.done();
+};
+
 exports.testNewState = function(test) {
 
   var obj = {
@@ -84,7 +110,7 @@ exports.testNewState = function(test) {
     }
   };
 
-  var proxy = new raop.AspectProxy(
+  var aopObject = raop.weave(
     obj,
     function(value/*, target*/) {
       return !!value;
@@ -94,7 +120,6 @@ exports.testNewState = function(test) {
       options.args[0] = 1000;
     }
   );
-  var aopObject = proxy.getAOPObject();
 
   test.ok(aopObject.a(1) === 1000, "method a aop apply");
 

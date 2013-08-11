@@ -122,6 +122,7 @@
   var argumentsToArray = function(args){
     return aSlice.call(args);
   };
+  raop.argumentsToArray = argumentsToArray;
 
   // Utils end ==========================================================
 
@@ -192,14 +193,15 @@
     return action;
   };
 
-  var cut = function(target, todo, type, advice) {
+  var cut = function(target, todo, type, advice, method) {
     return function() {
       return type({
         args: arguments,
         target: target,
         todo: todo,
         advice: advice,
-        type: type
+        type: type,
+        method: method
       });
     };
   };
@@ -211,8 +213,8 @@
     }
     keys.forEach(function(val) {
       var p = obj[val];
-      if(raop.isFunction(p) && pointcut.isMatch(val, obj)) {
-        obj[val] = cut(obj, p, type, advice);
+      if(raop.isFunction(p) && pointcut.isMatch(val)) {
+        obj[val] = cut(obj, p, type, advice, val);
       }
     });
     return obj;
@@ -251,15 +253,7 @@
     }
   );
 
-  raop.AspectProxy = function(context, pointcut, type, advice) {
-    this.context = context;
-    this.pointcut = pointcut;
-    this.type = type;
-    this.advice = advice;
-  };
-  raop.AspectProxy.prototype.getAOPObject = function() {
-    return raop.Aspect.weave(this.context, this.pointcut, this.type, this.advice);
-  };
+  raop.weave = raop.Aspect.weave;
 
   // Freeze. Only ES 5+
   Object.freeze(raop);
