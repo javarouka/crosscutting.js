@@ -1,6 +1,6 @@
 {
   "name": "raop",
-  "version": "0.20.0",
+  "version": "0.20.2",
   "description": "RAOP.js is simple JavaScript library that provides an object-based AOP",
   "main": "raop.js",
   "dependencies": {

@@ -186,6 +186,9 @@
   };
 
   var Advice = function(action) {
+    action.$RAOP = {
+      wrap: true
+    };
     return action;
   };
 
@@ -208,10 +211,11 @@
     }
     keys.forEach(function(val) {
       var p = obj[val];
-      if(raop.isFunction(p) && pointcut.isMatch(val)) {
+      if(raop.isFunction(p) && pointcut.isMatch(val, obj)) {
         obj[val] = cut(obj, p, type, advice);
       }
     });
+    return obj;
   };
 
   raop.Aspect = {
@@ -236,7 +240,10 @@
       if(!raop.isFunction(options.advice)) {
         throw adviceFunctionInvalidError;
       }
-      options.advice = new Advice(options.advice);
+
+      if(!options.advice.$RAOP) {
+        options.advice = new Advice(options.advice);
+      }
       // if second arguments is not Pointcut object, transform it.
       if(!(options.args[1] instanceof Pointcut)) {
         options.args[1] = new Pointcut(options.args[1]);
@@ -244,9 +251,18 @@
     }
   );
 
+  raop.AspectProxy = function(context, pointcut, type, advice) {
+    this.context = context;
+    this.pointcut = pointcut;
+    this.type = type;
+    this.advice = advice;
+  };
+  raop.AspectProxy.prototype.getAOPObject = function() {
+    return raop.Aspect.weave(this.context, this.pointcut, this.type, this.advice);
+  };
+
   // Freeze. Only ES 5+
   Object.freeze(raop);
 
   // AOP end =========================================================
-
 })(this);

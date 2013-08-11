@@ -27,7 +27,7 @@ exports.testAroundType = function(test) {
     obj,
     new raop.Aspect.Pointcut(/a/),
     raop.Aspect.AdviceType.AROUND,
-    function(todo, options) {
+    function(todo/*, options*/) {
       return todo();
     }
   );
@@ -36,7 +36,7 @@ exports.testAroundType = function(test) {
     obj,
     new raop.Aspect.Pointcut(/b/),
     raop.Aspect.AdviceType.AROUND,
-    function(todo, options) {
+    function(todo/*, options*/) {
       return todo(100) + 1;
     }
   );
@@ -74,5 +74,31 @@ exports.testApplyAOPBasic = function(test) {
   test.ok(obj.c(3) === 1000, "method a aop apply");
 
   test.done();
+};
+
+exports.testNewState = function(test) {
+
+  var obj = {
+    a: function(one) {
+      return one;
+    }
+  };
+
+  var proxy = new raop.AspectProxy(
+    obj,
+    function(value/*, target*/) {
+      return !!value;
+    },
+    raop.Aspect.AdviceType.BEFORE,
+    function(options) {
+      options.args[0] = 1000;
+    }
+  );
+  var aopObject = proxy.getAOPObject();
+
+  test.ok(aopObject.a(1) === 1000, "method a aop apply");
+
+  test.done();
+
 };
 
