@@ -6,3 +6,14 @@ code {
     width: 100%;
     padding: 10px 5px;
 }
+
+dl.arguments-desc {
+    background-color: #b9cdff;
+    font-size: 14px;
+    padding: 5px 5px 5px 25px;
+}
+
+dl.arguments-desc dt {
+    font-weight: bold;
+    text-decoration: underline;
+}
