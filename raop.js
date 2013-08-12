@@ -134,7 +134,8 @@
    *    target: target, // context(this) object
    *    todo: todo, // aop target function
    *    advice: advice, // advice function
-   *    type: type // advice type
+   *    type: type, // advice type
+   *    method: method name // join aop method name
    * }
    */
   var AdviceType = {
