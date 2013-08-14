@@ -1,19 +1,47 @@
+/*@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);*/
+
+body {
+    font-family: 'Nanum Gothic', 'Gulim', serif;
+    color: #000000;
+}
+header h2 {
+    margin-top: 5px;
+    font-size: 1.2em;
+}
+selction p {
+    font-size: 1.0em;
+}
+selction ul {
+    padding-left: 10px;
+}
 section li {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+section h1 {
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 5px;
+}
 code {
     width: 100%;
-    padding: 10px 5px;
+    padding: 2px 5px;
+    margin-top: 5px;
+    display: block;
 }
 
 dl.arguments-desc {
-    background-color: #b9cdff;
+    background-color: #FFF;
     font-size: 14px;
     padding: 5px 5px 5px 25px;
 }
 
 dl.arguments-desc dt {
+    font-size: 1.0em;
     font-weight: bold;
     text-decoration: underline;
+    margin-top: 5px;
+}
+dl.arguments-desc dd {
+    font-size: 0.9em;
+    margin-bottom: 15px;
 }

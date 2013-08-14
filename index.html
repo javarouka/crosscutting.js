@@ -1,115 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/additional.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Raop.js by javarouka</title>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/additional.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <title>Raop.js by javarouka</title>
 </head>
 
 <body>
 <div id="container">
-    <div class="inner">
+  <div class="inner">
 
-        <header>
-            <h1>Raop.js</h1>
-            <h2>RAOP is a simple JavaScript library that provides an object-based AOP.</h2>
-        </header>
+    <header>
+      <h1>Raop.js</h1>
+      <h2>RAOP는 오브젝트 기반의 AOP 를 제공하는 간단한 자바스크립트 라이브러리입니다.</h2>
+    </header>
 
-        <section id="downloads" class="clearfix">
-            <a href="https://github.com/javarouka/raop.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-            <a href="https://github.com/javarouka/raop.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-            <a href="https://github.com/javarouka/raop.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+    <section id="downloads" class="clearfix">
+      <a href="https://github.com/javarouka/raop.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+      <a href="https://github.com/javarouka/raop.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+      <a href="https://github.com/javarouka/raop.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+    </section>
 
-        <hr>
+    <hr>
 
-        <section id="main_content">
-            <h1>
-                <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation
-            </h1>
-            <ul>
-                <li>
-                    <h2>nodejs</h2>
-                    <code>
-                        $ npm install raop
-                    </code>
-                </li>
-                <li>
-                    <h2>browser</h2>
-                    <code>
-                        &lt;script type="text/javascript" src="/path/to/raop.min.js"&gt;&lt;/script&gt;
-                    </code>
-                </li>
-            </ul>
+    <section id="main_content">
+      <h1>
+        <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>
+        설치
+      </h1>
+      <ul>
+        <li>
+          <h2>nodejs</h2>
+          <code>
+            $ npm install raop
+          </code>
+        </li>
+        <li>
+          <h2>browser</h2>
+          <code>
+            &lt;script type="text/javascript" src="/path/to/raop.min.js"&gt;&lt;/script&gt;
+          </code>
+        </li>
+      </ul>
 
-            <h1>
-                <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage
-            </h1>
-            <h2>Basic</h2>
-            <h3>raop.weave</h3>
-            <p>
-                <code>raop.weave({aopTarget}, {pointcut}, {adviceType}, {advice})</code>
-            </p>
-            <ul>
-                <li>
-                    <h4>aopTarget</h4>
-                    <p>object to apply aop</p>
-                </li>
-                <li>
-                    <h4>pointcut</h4>
-                    <p>
-                        It is a method to apply aop in aopTarget.<br/>
-                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">RegExp</a> or function can be.
-                        If you use function pointscut, the arguments are as follows.
-                    </p>
-                    <dl class="arguments-desc">
-                        <dt>Method Name</dt>
-                        <dd>each aopTarget's public method name</dd>
-                    </dl>
-                </li>
-                <li>
-                    <h4>adviceType</h4>
-                    <p>advice timing. raop.Aspect.(BEFORE|AFTER|EXCEPTION|AROUND)</p>
-                    <dl class="arguments-desc">
-                        <dt>raop.Aspect.BEFORE</dt>
-                        <dd>Before running the actual method.</dd>
-                        <dt>raop.Aspect.AFTER</dt>
-                        <dd>AFTER running the actual method.</dd>
-                        <dt>raop.Aspect.EXCEPTION</dt>
-                        <dd>When any object is thrown. You can access object thrown to use "exception" property name.</dd>
-                        <dt>raop.Aspect.AROUND</dt>
-                        <dd>Advise running and the actual method is passed as the first argument. "options" argument is the second argument.</dd>
-                    </dl>
-                </li>
-                <li>
-                    <h4>advice</h4>
-                    <p>
-                        function to advice.<br>
-                        Arguments is a single object. The object properties are as follows
-                    </p>
-                    <dl class="arguments-desc">
-                        <dt>args</dt>
-                        <dd></dd>
-                        <dt>target</dt>
-                        <dd></dd>
-                        <dt>todo</dt>
-                        <dd></dd>
-                        <dt>advice</dt>
-                        <dd></dd>
-                        <dt>type</dt>
-                        <dd></dd>
-                    </dl>
-                </li>
-            </ul>
-            <h3>Simple Logging with AOP Example</h3>
+      <h1>
+        <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>
+        사용법
+      </h1>
+      <h2>기본</h2>
+      <h3>raop.weave 메서드</h3>
+      <p>
+        객체(Object)와 관심(Aspect)을 특정 대상과 시점에 묶는 메서드입니다. 인자를 4개 받습니다.<br/>
+        <code>raop.weave({aopTarget}, {pointcut}, {adviceType}, {advice})</code>
+      </p>
+      <ul>
+        <li>
+          <h4>aopTarget</h4>
+          <p>aop를 적용할 객체입니다.</p>
+        </li>
+        <li>
+          <h4>pointcut</h4>
+          <p>
+            aopTarget 에 적용될 메서드를 구별해내는 인자입니다.<br/>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">정규표현식</a>이나 함수가 될 수 있습니다.
+            함수를 사용한다면 인자를 받는데, 다음과 같습니다. 포인트컷 함수는 반드시 boolean 값을 반환해야 합니다.<br/>
+            <code>fnPointcut([Method Name])</code>
+          </p>
+          <dl class="arguments-desc">
+            <dt>Method Name</dt>
+            <dd>객체의 메서드 이름입니다. 이것으로 AOP 적용 여부를 판단하는 함수 몸체를 만들면 됩니다.</dd>
+          </dl>
+        </li>
+        <li>
+          <h4>adviceType</h4>
+          <p>어드바이스 타이밍입니다. 4종류가 있습니다(raop.Aspect.(BEFORE|AFTER|EXCEPTION|AROUND))</p>
+          <dl class="arguments-desc">
+            <dt>raop.Aspect.BEFORE</dt>
+            <dd>객체의 메소드가 실행되기 전 어드바이스가 실행됩니다.</dd>
+            <dt>raop.Aspect.AFTER</dt>
+            <dd>객체의 메소드가 실행된 뒤 어드바이스가 실행됩니다.</dd>
+            <dt>raop.Aspect.EXCEPTION</dt>
+            <dd>객체의 메소드가 무언가를 throw 하게 되면 실행됩니다.
+                당신은 어드바이스 함수에 전달되는 인자객체의 "exception" 속성을 사용하여 던져진 객체에 접근할 수 있습니다.</dd>
+            <dt>raop.Aspect.AROUND</dt>
+            <dd>객체의 메소드가 실행되지 않고 어드바이스가 실행됩니다.
+                대신 객체의 메소드는 어드바이스 함수의 첫번째 인자로 전달됩니다. 일반적인 인자 객체는 두번째 인자로 전달됩니다.</dd>
+          </dl>
+        </li>
+        <li>
+          <h4>advice</h4>
+          <p>
+            어드바이스 함수입니다.<br/>
+            어드바이스 함수는 일반적으로 인자 객체를 인자로 전달 받습니다.
+            다만 어드바이스 타이밍이 AROUND 일 경우 첫번째 인자로 객체 메소드가 오므로 인자 객체는 두번째 인자가 됩니다.<br/>
+            인자 객체의 속성은 다음과 같습니다.
+          </p>
+          <dl class="arguments-desc">
+            <dt>args</dt>
+            <dd>객체 메서드에 전달되는 Argument 객체입니다. 이 값을 조작하면 실제 객체 메서드의 인자도 바뀝니다. Arguments 객체에 대해서는
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments" target="_blank">MDN 문서</a>를 참고하세요</dd>
+            <dt>target</dt>
+            <dd>AOP가 적용되는 객체입니다. 어드바이스는 이 객체를 컨텍스트(this)로 하여 실행됩니다.</dd>
+            <dt>todo</dt>
+            <dd>실제 수행될 메서드입니다</dd>
+            <dt>advice</dt>
+            <dd>weave 시 인자로 준 어드바이스 함수입니다.</dd>
+            <dt>type</dt>
+            <dd>weave 시 인자로 준 어드바이스 타이밍입니다.</dd>
+            <dt>method</dt>
+            <dd>pointcut에 의해 join 된 메서드의 이름입니다.</dd>
+            <dt>exception</dt>
+            <dd>
+              어드바이스 타입이 EXCEPTION이고 객체 메서드가 객체를 throw할 경우 객체 메서드에서 던져진 객체를 가지고 있습니다.
+            </dd>
+          </dl>
+        </li>
+      </ul>
+      <h3>객체의 메서드가 실행될 때 로그를 찍는 간단한 예제</h3>
             <pre>var calculator = {
     plus: function(a, b) {
         return a + b;
@@ -135,25 +150,25 @@ calculator = raop.weave(
 
 // console.log("method plus execute")
 var result = calculator.plus(1, 1);</pre>
-            <h1>
-                <a name="contributer" class="anchor" href="#contributer"><span class="octicon octicon-link"></span></a>
-                Contributer
-            </h1>
+      <h1>
+        <a name="contributer" class="anchor" href="#contributer"><span class="octicon octicon-link"></span></a>
+        Contributer
+      </h1>
 
-            <ul>
-                <li>
-                    <a href="mailto:javarouka@gmail.com">javarouka@gmail.com</a>
-                </li>
-            </ul>
+      <ul>
+        <li>
+          <a href="mailto:javarouka@gmail.com">javarouka@gmail.com</a>
+        </li>
+      </ul>
 
-        </section>
+    </section>
 
-        <footer>
-            Raop.js is maintained by <a href="https://github.com/javarouka">javarouka</a><br>
-            This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+    <footer>
+      Raop.js is maintained by <a href="https://github.com/javarouka">javarouka</a><br>
+      This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+    </footer>
 
-    </div>
+  </div>
 </div>
 </body>
 </html>

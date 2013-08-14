@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/additional.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Raop.js by javarouka</title>
+</head>
+
+<body>
+<div id="container">
+    <div class="inner">
+
+        <header>
+            <h1>Raop.js</h1>
+            <p>RAOP is a simple JavaScript library that provides an object-based AOP.</p>
+        </header>
+
+        <section id="downloads" class="clearfix">
+            <a href="https://github.com/javarouka/raop.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+            <a href="https://github.com/javarouka/raop.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+            <a href="https://github.com/javarouka/raop.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+            <h1>
+                <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation
+            </h1>
+            <ul>
+                <li>
+                    <h2>nodejs</h2>
+                    <code>
+                        $ npm install raop
+                    </code>
+                </li>
+                <li>
+                    <h2>browser</h2>
+                    <code>
+                        &lt;script type="text/javascript" src="/path/to/raop.min.js"&gt;&lt;/script&gt;
+                    </code>
+                </li>
+            </ul>
+
+            <h1>
+                <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage
+            </h1>
+            <h2>Basic</h2>
+            <h3>raop.weave</h3>
+            <p>
+                <code>raop.weave({aopTarget}, {pointcut}, {adviceType}, {advice})</code>
+            </p>
+            <ul>
+                <li>
+                    <h4>aopTarget</h4>
+                    <p>object to apply aop</p>
+                </li>
+                <li>
+                    <h4>pointcut</h4>
+                    <p>
+                        It is a method to apply aop in aopTarget.<br/>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">RegExp</a> or function can be.
+                        If you use function pointscut, the arguments are as follows.
+                    </p>
+                    <dl class="arguments-desc">
+                        <dt>Method Name</dt>
+                        <dd>each aopTarget's public method name</dd>
+                    </dl>
+                </li>
+                <li>
+                    <h4>adviceType</h4>
+                    <p>advice timing. raop.Aspect.(BEFORE|AFTER|EXCEPTION|AROUND)</p>
+                    <dl class="arguments-desc">
+                        <dt>raop.Aspect.BEFORE</dt>
+                        <dd>Before running the actual method.</dd>
+                        <dt>raop.Aspect.AFTER</dt>
+                        <dd>AFTER running the actual method.</dd>
+                        <dt>raop.Aspect.EXCEPTION</dt>
+                        <dd>When any object is thrown. You can access object thrown to use "exception" property name.</dd>
+                        <dt>raop.Aspect.AROUND</dt>
+                        <dd>Advise running and the actual method is passed as the first argument. "options" argument is the second argument.</dd>
+                    </dl>
+                </li>
+                <li>
+                    <h4>advice</h4>
+                    <p>
+                        function to advice.<br>
+                        Arguments is a single object. The object properties are as follows
+                    </p>
+                    <dl class="arguments-desc">
+                        <dt>args</dt>
+                        <dd></dd>
+                        <dt>target</dt>
+                        <dd></dd>
+                        <dt>todo</dt>
+                        <dd></dd>
+                        <dt>advice</dt>
+                        <dd></dd>
+                        <dt>type</dt>
+                        <dd></dd>
+                    </dl>
+                </li>
+            </ul>
+            <h3>Simple Logging with AOP Example</h3>
+            <pre>var calculator = {
+    plus: function(a, b) {
+        return a + b;
+    },
+    minus: function(a, b) {
+        return a - b;
+    }
+};
+
+var logAdvice = function(options) {
+    console.log("method " + options.method + " execute");
+};
+
+// all method aop apply, type BEFORE
+calculator = raop.weave(
+    calculator,
+    function() {
+        return true;
+    },
+    raop.Aspect.AdviceType.BEFORE,
+    logAdvice
+);
+
+// console.log("method plus execute")
+var result = calculator.plus(1, 1);</pre>
+            <h1>
+                <a name="contributer" class="anchor" href="#contributer"><span class="octicon octicon-link"></span></a>
+                Contributer
+            </h1>
+
+            <ul>
+                <li>
+                    <a href="mailto:javarouka@gmail.com">javarouka@gmail.com</a>
+                </li>
+            </ul>
+
+        </section>
+
+        <footer>
+            Raop.js is maintained by <a href="https://github.com/javarouka">javarouka</a><br>
+            This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+    </div>
+</div>
+</body>
+</html>
