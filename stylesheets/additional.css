@@ -29,9 +29,10 @@ code {
 }
 
 dl.arguments-desc {
-    background-color: #FFF;
     font-size: 14px;
     padding: 5px 5px 5px 25px;
+    background-color: #f2f2f2;
+    border: solid 1px #ddd;
 }
 
 dl.arguments-desc dt {
