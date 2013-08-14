@@ -102,6 +102,42 @@ exports.t = function(test) {
   test.done();
 };
 
+exports.testException = function(test) {
+  var calculator = {
+    plus: function(a, b) {
+      if(typeof a !== 'number' || typeof b !== 'number') {
+        throw new Error("arguments must be number type");
+      }
+      return a + b;
+    },
+    minus: function(a, b) {
+      if(typeof a !== 'number' || typeof b !== 'number') {
+        throw new Error("arguments must be number type");
+      }
+      return a - b;
+    }
+  };
+
+  var exception = null;
+  var throwHandler = function(options) {
+    exception = options.exception;
+    console.log("Error! " + exception.name + ". cause : " + exception.message);
+    if(exception.stack) console.log(exception.stack);
+  };
+  // all method aop apply, type BEFORE
+  calculator = raop.weave(
+    calculator,
+    /^plus/,
+    raop.Aspect.AdviceType.EXCEPTION,
+    throwHandler
+  );
+  var result = calculator.plus("one", "two");
+
+  test.ok(exception, "error was thrown by method");
+
+  test.done();
+};
+
 exports.testNewState = function(test) {
 
   var obj = {

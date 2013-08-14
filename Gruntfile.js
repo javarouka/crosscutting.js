@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         'raop.js'
       ],
       buildDirPath = "build/",
-      taskOrder = ['jshint', 'connect', 'nodeunit', 'qunit', 'uglify'],
+      taskOrder = ['jshint', /*'connect'*/ 'nodeunit', /*'qunit'*/ 'uglify'],
       banner = "/*\n <%= pkg.name %> JavaScript Library\n" +
         " author: javarouka@gmail.com\n" +
         " site: http://javarouka.github.io/raop.js\n" +
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
     connect: {
       server: {
         options: {
-          port: 8000,
+          port: 9999,
           base: '.'
         }
       }
