@@ -12,6 +12,47 @@ exports.testCheckExistProperties = function(test) {
   test.done();
 };
 
+exports.addValidator = function(test) {
+
+  var calculator = {
+    plus: function(a, b) {
+      return a + b;
+    },
+    minus: function(a, b) {
+      return a - b;
+    }
+  };
+
+  var argumentCheck = function(options) {
+    var args = options.args;
+    for(var i = 0, len = args.length; i < len; i++) {
+      if(typeof args[i] !== 'number') {
+        throw new TypeError("all arguments must be number type");
+      }
+    }
+  };
+
+  raop.weave(
+    calculator,
+    function() {
+      return true;
+    },
+    raop.Aspect.AdviceType.BEFORE,
+    argumentCheck
+  );
+
+  try {
+    calculator.plus("one", "two");
+    test.ok(false, "validator test failed...method success...");
+  }
+  catch(ok) {
+    test.ok(ok instanceof TypeError, "validator test success!!!!");
+  }
+
+  test.done();
+
+};
+
 exports.testAroundType = function(test) {
 
   var obj = {
