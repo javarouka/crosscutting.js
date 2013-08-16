@@ -112,7 +112,26 @@
                         <dl class="arguments-desc">
                             <dt>args</dt>
                             <dd>객체 메서드에 전달되는 Argument 객체입니다. 이 값을 조작하면 실제 객체 메서드의 인자도 바뀝니다. Arguments 객체에 대해서는
-                                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments" target="_blank">MDN 문서</a>를 참고하세요</dd>
+                                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments" target="_blank">MDN 문서</a>를 참고하세요
+                                <pre><code class="javascript">// Simple arguments control Example
+var obj = {
+    // return argument received
+    echo: function(value) { return value; }
+};
+raop.weave(
+    obj,
+    function() { return true; },
+    raop.Aspect.AdviceType.BEFORE,
+    function(options) {
+        // change first arguments.
+        options.args[0] = "yaho!";
+    }
+);
+// same result. "yaho!".
+console.log(obj.echo("ok?")); // "yaho!";
+console.log(obj.echo("hello?")); // "yaho!";
+</code></pre>
+                            </dd>
                             <dt>target</dt>
                             <dd>AOP가 적용되는 객체입니다. 어드바이스는 이 객체를 컨텍스트(this)로 하여 실행됩니다.</dd>
                             <dt>todo</dt>
