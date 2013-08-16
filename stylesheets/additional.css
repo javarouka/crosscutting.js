@@ -8,10 +8,17 @@ header h2 {
     margin-top: 5px;
     font-size: 1.2em;
 }
-selction p {
+section {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: solid 1px #EEE;
+    box-shadow: 2px 2px 3px #CCC;
+}
+section p {
     font-size: 1.0em;
 }
-selction ul {
+section ul {
     padding-left: 10px;
 }
 section li {
@@ -44,4 +51,18 @@ dl.arguments-desc dt {
 dl.arguments-desc dd {
     font-size: 0.9em;
     margin-bottom: 15px;
+}
+
+#gravata {
+    float: left;
+    margin-right: 20px;
+}
+
+.contributer {
+    padding: 10px 20px;
+    overflow: hidden;
+}
+
+footer {
+    clear: both;
 }
