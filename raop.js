@@ -83,6 +83,17 @@
     return obj === Object(obj);
   };
 
+  var INGNORE_TYPES = [
+    Function.prototype,
+    Number.prototype,
+    String.prototype,
+    Date.prototype,
+    Boolean.prototype,
+    Object.prototype,
+    Date.prototype,
+    Array.prototype
+  ];
+
   raop.noConflict = function() {
     root.raop = preventConflictName;
     return this;
@@ -195,7 +206,7 @@
   };
 
   var cut = function(target, todo, type, advice, method) {
-    return function() {
+    var f = function() {
       return type({
         args: arguments,
         target: target,
@@ -205,14 +216,26 @@
         method: method
       });
     };
+    f.name = method;
+    return f;
   };
 
   var weave = function(obj, pointcut, type, advice) {
+
+    INGNORE_TYPES.forEach(function(ignore) {
+       if(ignore === obj) {
+         throw new TypeError("cannot apply aop on Built-in Type");
+       }
+    });
+
     var keys = Object.keys(obj);
     if(raop.isString(type)) {
       type = AdviceType[type.toUpperCase()];
     }
     keys.forEach(function(val) {
+      if(!raop.isString(val)) {
+          return;
+      }
       var p = obj[val];
       if(raop.isFunction(p) && pointcut.isMatch(val)) {
         obj[val] = cut(obj, p, type, advice, val);
