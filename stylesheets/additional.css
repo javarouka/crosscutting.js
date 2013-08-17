@@ -82,7 +82,22 @@ dl.arguments-desc dd {
     margin-left: 10px;
 }
 
+.caution {
+    font-weight: 600;
+    padding: 10px 10px 5px 10px;
+    background-color: #f3dcbf;
+}
+.caution h1,
+.caution h2,
+.caution h3,
+.caution h4,
+.caution h5 {
+    font-weight: 900;
+    color: #a52a2a;
+}
+
 .contributer {
+    font-size: 0.9em;
     padding: 10px 20px;
     overflow: hidden;
 }
