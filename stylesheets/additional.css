@@ -98,7 +98,7 @@ pre, code, pre span, code span, a {
 }
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
-@media only screen and (max-width: 479px) {
+@media only screen and (max-width: 400px) {
     body section ul {
         margin: 0 !important;
         padding: 0 !important;
