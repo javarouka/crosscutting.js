@@ -19,7 +19,13 @@ section p {
     font-size: 1.0em;
 }
 section ul {
-    padding-left: 10px;
+    list-style: none;
+    padding-left: 5px;
+}
+section ul li {
+    padding: 1px;
+    list-style: inside;
+    margin: 0 15px;
 }
 section li {
     margin-top: 10px;
@@ -43,13 +49,13 @@ dl.arguments-desc {
 }
 
 dl.arguments-desc dt {
-    font-size: 1.0em;
+    font-size: 1.1em;
     font-weight: bold;
     text-decoration: underline;
     margin-top: 5px;
 }
 dl.arguments-desc dd {
-    font-size: 0.9em;
+    font-size: 1.0em;
     margin-bottom: 15px;
 }
 
