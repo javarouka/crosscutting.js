@@ -18,16 +18,7 @@
   Object.freeze = Object.freeze || function(obj) {
     return obj;
   };
-//  Object.keys = Object.keys || function(obj) {
-//    var ret = [];
-//    for(var k in obj) {
-//      if(!ownKey.call(obj, k)) {
-//        continue;
-//      }
-//      ret.push(k);
-//    }
-//    return ret;
-//  };
+
   Object.create = Object.create || function(obj) {
     var O = function(){};
     O.prototype = obj;
@@ -199,33 +190,39 @@
     return f;
   };
 
-  var weave = function(obj, pointcut, type, advice) {
+  var weave = function(objs, pointcut, type, advice) {
 
-    INGNORE_TYPES.forEach(function(ignore) {
-       if(ignore === obj) {
-         throw cannotApplyBuiltInError;
-       }
-    });
-
-    if(raop.isString(type)) {
-      type = AdviceType[type.toUpperCase()];
+    if(!raop.isArray(objs)) {
+        objs = [objs];
     }
-    var prop;
-    for(var val in obj) {
 
-      //contain all properties in prototype-chain.
-      //noinspection JSUnfilteredForInLoop
-      prop = val;
+    objs.forEach(function(obj) {
+      INGNORE_TYPES.forEach(function(ignore) {
+        if(ignore === obj) {
+          throw cannotApplyBuiltInError;
+        }
+      });
 
-      if(!raop.isString(prop)) {
+      if(raop.isString(type)) {
+        type = AdviceType[type.toUpperCase()];
+      }
+      var prop;
+      for(var val in obj) {
+
+        //contain all properties in prototype-chain.
+        //noinspection JSUnfilteredForInLoop
+        prop = val;
+
+        if(!raop.isString(prop)) {
           continue;
+        }
+        var p = obj[prop];
+        if(raop.isFunction(p) && pointcut.isMatch(prop)) {
+          obj[prop] = cut(obj, p, type, advice, prop);
+        }
       }
-      var p = obj[prop];
-      if(raop.isFunction(p) && pointcut.isMatch(prop)) {
-        obj[prop] = cut(obj, p, type, advice, prop);
-      }
-    }
-    return obj;
+    });
+    return this;
   };
 
   raop.Aspect = {
@@ -236,16 +233,20 @@
   };
 
   raop.before = function(obj, pointcut, advice) {
-    return raop.weave(obj, pointcut, AdviceType.BEFORE, advice);
+    raop.weave(obj, pointcut, AdviceType.BEFORE, advice);
+    return this;
   };
   raop.after = function(obj, pointcut, advice) {
-    return raop.weave(obj, pointcut, AdviceType.AFTER, advice);
+    raop.weave(obj, pointcut, AdviceType.AFTER, advice);
+    return this;
   };
   raop.around = function(obj, pointcut, advice) {
-    return raop.weave(obj, pointcut, AdviceType.AROUND, advice);
+    raop.weave(obj, pointcut, AdviceType.AROUND, advice);
+    return this;
   };
   raop.exception = function(obj, pointcut, advice) {
-    return raop.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
+    raop.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
+    return this;
   };
 
   // Argument Validation AOP

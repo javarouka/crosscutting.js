@@ -11,9 +11,9 @@ module.exports = function(grunt) {
       ],
       buildDirPath = "build/",
       taskOrder = ['jshint', /*'connect'*/ 'nodeunit', /*'qunit'*/ 'uglify'],
-      banner = "/*\n <%= pkg.name %> JavaScript Library\n" +
+      banner = "/*\n <%= pkg.name %>. AOP JavaScript Library\n" +
         " author: javarouka@gmail.com\n" +
-        " site: http://javarouka.github.io/raop.js\n" +
+        " document: http://javarouka.github.io/raop.js\n" +
         " license: MIT\n" +
         " create date: <%= grunt.template.today('yyyy-mm-dd') %>\n" +
         "*/\n";

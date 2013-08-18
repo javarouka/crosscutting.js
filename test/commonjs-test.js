@@ -155,7 +155,7 @@ exports.t = function(test) {
   var logAdvice = function(options) {
     console.log("calc " + options.method + " execute");
   };
-  calculator = raop.before(
+  raop.before(
     calculator,
     function() {
       return true;
@@ -190,7 +190,7 @@ exports.testException = function(test) {
     if(exception.stack) console.log(exception.stack);
   };
   // all method aop apply, type BEFORE
-  calculator = raop.exception(
+  raop.exception(
     calculator,
     /^plus/,
     throwHandler
@@ -210,7 +210,7 @@ exports.testNewState = function(test) {
     }
   };
 
-  var aopObject = raop.before(
+  raop.before(
     obj,
     function(value/*, target*/) {
       return !!value;
@@ -220,7 +220,7 @@ exports.testNewState = function(test) {
     }
   );
 
-  test.ok(aopObject.a(1) === 1000, "method a aop apply");
+  test.ok(obj.a(1) === 1000, "method a aop apply");
 
   test.done();
 
