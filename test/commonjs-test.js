@@ -7,7 +7,12 @@ var raop = require("./../raop.js");
 
 exports.testCheckExistProperties = function(test) {
   test.ok(typeof raop.Aspect === 'object', "Aspect object exists");
-  test.ok(typeof raop.Aspect.weave === 'function', "Aspect weave method exists");
+  test.ok(
+    typeof raop.before === 'function' &&
+    typeof raop.after === 'function' &&
+    typeof raop.around === 'function' &&
+    typeof raop.exception === 'function',
+    "Aspect weave method exists");
   test.ok(typeof raop.Aspect.AdviceType === 'object', "Aspect AdviceType object exists");
   test.done();
 };
@@ -32,12 +37,11 @@ exports.addValidator = function(test) {
     }
   };
 
-  raop.weave(
+  raop.before(
     calculator,
     function() {
       return true;
     },
-    raop.Aspect.AdviceType.BEFORE,
     argumentCheck
   );
 
@@ -64,19 +68,17 @@ exports.testAroundType = function(test) {
     }
   };
 
-  raop.weave(
+  raop.around(
     obj,
     new raop.Aspect.Pointcut(/a/),
-    raop.Aspect.AdviceType.AROUND,
     function(todo/*, options*/) {
       return todo();
     }
   );
 
-  raop.weave(
+  raop.around(
     obj,
     new raop.Aspect.Pointcut(/b/),
-    raop.Aspect.AdviceType.AROUND,
     function(todo/*, options*/) {
       return todo(100) + 1;
     }
@@ -101,10 +103,9 @@ exports.testApplyAOPBasic = function(test) {
     }
   };
 
-  raop.weave(
+  raop.before(
     obj,
     /^(a+|c+)/,
-    raop.Aspect.AdviceType.BEFORE,
     function(options) {
       options.args[0] = 1000;
     }
@@ -130,12 +131,11 @@ exports.t = function(test) {
   var logAdvice = function(options) {
     console.log("calc " + options.method + " execute");
   };
-  calculator = raop.weave(
+  calculator = raop.before(
     calculator,
     function() {
       return true;
     },
-    raop.Aspect.AdviceType.BEFORE,
     logAdvice
   );
   var result = calculator.plus(1, 1);
@@ -166,10 +166,9 @@ exports.testException = function(test) {
     if(exception.stack) console.log(exception.stack);
   };
   // all method aop apply, type BEFORE
-  calculator = raop.weave(
+  calculator = raop.exception(
     calculator,
     /^plus/,
-    raop.Aspect.AdviceType.EXCEPTION,
     throwHandler
   );
   var result = calculator.plus("one", "two");
@@ -187,12 +186,11 @@ exports.testNewState = function(test) {
     }
   };
 
-  var aopObject = raop.weave(
+  var aopObject = raop.before(
     obj,
     function(value/*, target*/) {
       return !!value;
     },
-    raop.Aspect.AdviceType.BEFORE,
     function(options) {
       options.args[0] = 1000;
     }

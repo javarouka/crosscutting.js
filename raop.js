@@ -251,6 +251,19 @@
     AdviceType: AdviceType
   };
 
+  raop.before = function(obj, pointcut, advice) {
+    return raop.weave(obj, pointcut, AdviceType.BEFORE, advice);
+  };
+  raop.after = function(obj, pointcut, advice) {
+    return raop.weave(obj, pointcut, AdviceType.AFTER, advice);
+  };
+  raop.around = function(obj, pointcut, advice) {
+    return raop.weave(obj, pointcut, AdviceType.AROUND, advice);
+  };
+  raop.exception = function(obj, pointcut, advice) {
+    return raop.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
+  };
+
   // Argument Validation AOP
   weave(
     raop.Aspect,
