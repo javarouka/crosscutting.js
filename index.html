@@ -170,6 +170,30 @@ console.log(obj.echo("hello?")); // "yaho!";
                         </dl>
                     </li>
                 </ul>
+                <h3>단축 메서드들</h3>
+                <p>AdviceType을 따로 인자로 주지 않고 축약한 단축 메서드로 쓸 수 있습니다</p>
+                <pre><code class="javascript">// same action
+raop.before(
+    { hello: function() {} },
+    /hello/,
+    function(){}
+);
+raop.waeve(
+    { hello: function() {} },
+    /hello/,
+    raop.Aspect.BEFORE,
+    function(){}
+);</code></pre>
+                <dl class="arguments-desc">
+                    <dt>raop.before</dt>
+                    <dd>raop.Aspect.BEFORE 동작과 같습니다</dd>
+                    <dt>raop.after</dt>
+                    <dd>raop.Aspect.AFTER 동작과 같습니다</dd>
+                    <dt>raop.around</dt>
+                    <dd>raop.Aspect.AROUND 동작과 같습니다</dd>
+                    <dt>raop.exception</dt>
+                    <dd>raop.Aspect.EXCEPTION 동작과 같습니다</dd>
+                </dl>
             </section>
             <section class="examples">
                 <h2>Example Codes</h2>
@@ -195,10 +219,9 @@ var argumentCheck = function(options) {
     }
 };
 
-raop.weave(
+raop.before(
     calculator,
     function() { return true; },
-    raop.Aspect.AdviceType.BEFORE,
     argumentCheck
 );
 
@@ -217,7 +240,7 @@ raop.weave(
     function(name) {
         return name === "plus";
     },
-    raop.Aspect.AdviceType.BEFORE,
+    raop.Aspect.AdviceType.BEFORE
     logAdvice
 );
 
@@ -233,11 +256,10 @@ var result = calculator.plus(1, 1);</code></pre>
 };
 
 // aop apply, type EXCEPTION
-raop.weave(
+raop.exception(
     calculator,
     /^plus/,
-    raop.Aspect.AdviceType.EXCEPTION,
-    logAdvice
+    throwHandler
 );
 
 // string arguments
