@@ -221,11 +221,7 @@ var argumentCheck = function(options) {
     }
 };
 
-raop.before(
-    calculator,
-    true,
-    argumentCheck
-);
+raop.before(calculator, true, argumentCheck);
 
 // maybe throw TypeError.
 calculator.plus("one", "two");</code></pre>
@@ -258,11 +254,7 @@ var result = calculator.plus(1, 1);</code></pre>
 };
 
 // aop apply, type EXCEPTION
-raop.exception(
-    calculator,
-    /^plus/,
-    throwHandler
-);
+raop.exception(calculator, /^plus/, throwHandler);
 
 // string arguments
 var result = calculator.plus("one", "two");
