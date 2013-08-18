@@ -6,23 +6,28 @@
     ownKey = Object.prototype.hasOwnProperty,
     toString = Object.prototype.toString,
     argumentError = new Error("argument is invalid"),
+    cannotApplyBuiltInError = new TypeError("cannot apply aop on Built-in Type"),
     adviceFunctionInvalidError =
       new Error("advice function is invalid. It should be function type");
+
+  Object.getPrototypeOf = Object.getPrototypeOf || function(obj) {
+    return (obj.constructor) ? obj.constructor.prototype : {};
+  };
 
   // polyfill
   Object.freeze = Object.freeze || function(obj) {
     return obj;
   };
-  Object.keys = Object.keys || function(obj) {
-    var ret = [];
-    for(var k in obj) {
-      if(!ownKey.call(obj, k)) {
-        continue;
-      }
-      ret.push(k);
-    }
-    return ret;
-  };
+//  Object.keys = Object.keys || function(obj) {
+//    var ret = [];
+//    for(var k in obj) {
+//      if(!ownKey.call(obj, k)) {
+//        continue;
+//      }
+//      ret.push(k);
+//    }
+//    return ret;
+//  };
   Object.create = Object.create || function(obj) {
     var O = function(){};
     O.prototype = obj;
@@ -67,7 +72,7 @@
     root.raop = raop;
   }
 
-  var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp' ],
+  var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
     checker = function(type) {
       raop['is' + type] = function(obj) {
         return toString.call(obj) === '[object ' + type + ']';
@@ -98,35 +103,6 @@
     root.raop = preventConflictName;
     return this;
   };
-
-  // Object =========================================================
-
-  raop.each = function(obj, iter) {
-    if(obj.forEach) {
-      obj.forEach(iter);
-    }
-    else if(raop.isObject(obj)) {
-      var k;
-      for(k in obj) {
-        if(!ownKey.call(obj, k)) {
-          continue;
-        }
-        iter.call(obj, obj[k], k);
-      }
-    }
-    else {
-      iter(obj);
-    }
-  };
-
-  raop.extend = function(dst, src) {
-    raop.each(src, function(v, k) {
-      dst[k] = v;
-    });
-    return obj;
-  };
-
-  // Object end =========================================================
 
   // Utils ==============================================================
 
@@ -187,6 +163,9 @@
     this.matcher = matcher;
   };
   Pointcut.prototype.isMatch = function(value) {
+    if(raop.isBoolean(this.matcher)) {
+      return this.matcher;
+    }
     if(raop.isRegExp(this.matcher)) {
       return this.matcher.test(value);
     }
@@ -224,23 +203,28 @@
 
     INGNORE_TYPES.forEach(function(ignore) {
        if(ignore === obj) {
-         throw new TypeError("cannot apply aop on Built-in Type");
+         throw cannotApplyBuiltInError;
        }
     });
 
-    var keys = Object.keys(obj);
     if(raop.isString(type)) {
       type = AdviceType[type.toUpperCase()];
     }
-    keys.forEach(function(val) {
-      if(!raop.isString(val)) {
-          return;
+    var prop;
+    for(var val in obj) {
+
+      //contain all properties in prototype-chain.
+      //noinspection JSUnfilteredForInLoop
+      prop = val;
+
+      if(!raop.isString(prop)) {
+          continue;
       }
-      var p = obj[val];
-      if(raop.isFunction(p) && pointcut.isMatch(val)) {
-        obj[val] = cut(obj, p, type, advice, val);
+      var p = obj[prop];
+      if(raop.isFunction(p) && pointcut.isMatch(prop)) {
+        obj[prop] = cut(obj, p, type, advice, prop);
       }
-    });
+    }
     return obj;
   };
 

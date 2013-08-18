@@ -9,11 +9,35 @@ exports.testCheckExistProperties = function(test) {
   test.ok(typeof raop.Aspect === 'object', "Aspect object exists");
   test.ok(
     typeof raop.before === 'function' &&
-    typeof raop.after === 'function' &&
-    typeof raop.around === 'function' &&
-    typeof raop.exception === 'function',
+      typeof raop.after === 'function' &&
+      typeof raop.around === 'function' &&
+      typeof raop.exception === 'function',
     "Aspect weave method exists");
   test.ok(typeof raop.Aspect.AdviceType === 'object', "Aspect AdviceType object exists");
+  test.done();
+};
+
+exports.addValidator = function(test) {
+
+  var Target = function(name) {
+    this.name = name;
+  };
+
+  Target.prototype.getName = function() {
+    return this.name;
+  };
+
+  var target = new Target("이항희");
+
+  raop.before(
+    target,
+    true,
+    function(options) {
+      options.args[0] = "이항희 화이팅!";
+    }
+  );
+
+  test.ok(target.getName() === "이항희 화이팅!", "prototype method aop apply");
   test.done();
 };
 
