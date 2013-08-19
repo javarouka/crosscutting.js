@@ -248,6 +248,18 @@ raop.weave(
 // console.log("method plus execute")
 var result = calculator.plus(1, 1);</code></pre>
 
+                <h4 id="example2">AROUND 어드바이스 예제</h4>
+                <p>타겟 메서드의 실행을 제어할 수 있고 결과의 조작도 할 수 있습니다. 이 예제에서는 calculator의 결과를 문자열로 변환하여 반환하겠습니다.</p>
+                <pre><code class="javascript">var stringify = function(todo, options) {
+    var result = todo();
+    return result + ""; // toString
+};
+
+raop.around(calculator, true, logAdvice);
+
+// print console "string"
+console.log(typeof calculator.plus(1, 1));</code></pre>
+
                 <h4 id="example3">EXCEPTION 어드바이스 예제</h4>
                 <p>위에 나왔던 <a href="#example1">인자가 숫자인지 검증하는 AOP를 적용</a> 했다고 가정합니다. 이 예제에서는 일부러 오류를 내고 있습니다.</p>
                 <pre><code class="javascript">var throwHandler = function(options) {
