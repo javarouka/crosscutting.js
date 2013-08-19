@@ -17,14 +17,14 @@ exports.testCheckExistProperties = function(test) {
   test.done();
 };
 
-exports.addValidator = function(test) {
+exports.addTargetTest = function(test) {
 
   var Target = function(name) {
     this.name = name;
   };
 
-  Target.prototype.getName = function() {
-    return this.name;
+  Target.prototype.getName = function(prefix) {
+    return prefix + this.name;
   };
 
   var target = new Target("이항희");
@@ -33,12 +33,13 @@ exports.addValidator = function(test) {
     target,
     true,
     function(options) {
-      options.args[0] = "이항희 화이팅!";
+      options.args[0] = "이름: ";
     }
   );
 
-  test.ok(target.getName() === "이항희 화이팅!", "prototype method aop apply");
+  test.ok(target.getName("Name: ") === "이름: 이항희", "new object apply test");
   test.done();
+
 };
 
 exports.addValidator = function(test) {
@@ -142,7 +143,7 @@ exports.testApplyAOPBasic = function(test) {
   test.done();
 };
 
-exports.t = function(test) {
+exports.logTest = function(test) {
 
   var calculator = {
     plus: function(a, b) {
