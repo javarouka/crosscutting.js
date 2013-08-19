@@ -90,7 +90,7 @@ header h2 {
 }
 
 .inner {
-    width: 840px;
+    width: 70%;
     margin: 0 auto;
 }
 
@@ -165,33 +165,36 @@ a.button span {
     margin-right: 0;
 }
 
-code, pre {
-    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
-    color: #222;
-    margin-bottom: 30px;
-    font-size: 14px;
+code {
+    font-family: "consolas", "Monaco";
+    /*font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;*/
+    /*color: #222;*/
+    /*margin-bottom: 30px;*/
+    /*font-size: 14px;*/
 }
 
 code {
-    background-color: #f2f2f2;
-    border: solid 1px #ddd;
-    padding: 0 3px;
+    /*background-color: #f2f2f2;*/
+    /*border: solid 1px #ddd;*/
+    /*padding: 0 3px;*/
+    border-radius: 4px;
 }
 
 pre {
-    padding: 10px;
-    border: solid 1px #aaa;
+    /*padding: 10px;*/
+    /*border: solid 1px #aaa;*/
     /*background: #303030;*/
     /*color: #f2f2f2;*/
     text-shadow: none;
-    overflow: auto;
+    /*overflow: auto;*/
+    margin-bottom: 20px;
 }
-pre code {
-    color: #f2f2f2;
-    background-color: #303030;
-    border: none;
-    padding: 0;
-}
+/*pre code {*/
+    /*color: #f2f2f2;*/
+    /*background-color: #303030;*/
+    /*border: none;*/
+    /*padding: 0;*/
+/*}*/
 
 ul, ol, dl {
     margin-bottom: 20px;

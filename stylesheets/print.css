@@ -211,6 +211,9 @@ footer {
 footer a {
   color: #666;
 }
+.no-print {
+    display: none;
+}
 
 /* MISC */
 .clearfix:after {

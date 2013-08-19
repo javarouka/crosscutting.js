@@ -4,23 +4,39 @@ body {
     font-family: 'Nanum Gothic', 'Gulim', serif;
     color: #000000;
 }
+.inner {
+    max-width: 900px;
+    margin: 0 auto;
+}
 header h2 {
     margin-top: 5px;
     font-size: 1.2em;
 }
-selction p {
+section {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: solid 1px #EEE;
+    box-shadow: 2px 2px 3px #CCC;
+}
+section p {
     font-size: 1.0em;
+    width: 100%;
 }
-selction ul {
-    padding-left: 10px;
+section ul {
+    list-style: none;
+    padding-left: 5px;
 }
-section li {
-    margin-top: 10px;
-    margin-bottom: 10px;
+section ul li {
+    padding: 1px;
+    list-style: inside;
+    margin: 5px 15px;
+    width: 100%;
 }
 section h1 {
     border-bottom: solid 1px #ccc;
     margin-bottom: 5px;
+    width: 100%;
 }
 code {
     padding: 4px 5px;
@@ -36,12 +52,81 @@ dl.arguments-desc {
 }
 
 dl.arguments-desc dt {
-    font-size: 1.0em;
+    font-size: 1.1em;
     font-weight: bold;
     text-decoration: underline;
     margin-top: 5px;
 }
 dl.arguments-desc dd {
-    font-size: 0.9em;
+    font-size: 1.0em;
     margin-bottom: 15px;
+}
+
+#gravata {
+    float: left;
+    margin-right: 20px;
+}
+#downloads {
+    text-align: center;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+#downloads a {
+    float: none;
+    display: inline-block;
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+.caution {
+    font-weight: 600;
+    padding: 10px 10px 5px 10px;
+    background-color: #f3dcbf;
+}
+.caution h1,
+.caution h2,
+.caution h3,
+.caution h4,
+.caution h5 {
+    font-weight: 900;
+    color: #a52a2a;
+}
+
+.contributer {
+    font-size: 0.9em;
+    padding: 10px 20px;
+    overflow: hidden;
+}
+
+footer {
+    clear: both;
+}
+
+pre, code, pre span, code span, a {
+    text-overflow: clip !important;
+    word-wrap: break-word;
+    /*word-break: break-word !important;*/
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 400px) {
+    body section ul {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    section {
+        margin: 1%;
+    }
+    #gravata {
+        text-align: center;
+        float: none;
+        margin: 0 auto;
+    }
+    #container {
+        margin-top: 150px;
+    }
 }
