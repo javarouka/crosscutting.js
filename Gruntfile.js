@@ -7,13 +7,13 @@ module.exports = function(grunt) {
 
   var destinationName = '<%= pkg.name %>',
       sources = [
-        'raop.js'
+        'crosscutting.js'
       ],
       buildDirPath = "build/",
       taskOrder = ['jshint', /*'connect'*/ 'nodeunit', /*'qunit'*/ 'uglify'],
       banner = "/*\n <%= pkg.name %>. AOP JavaScript Library\n" +
         " author: javarouka@gmail.com\n" +
-        " document: http://javarouka.github.io/raop.js\n" +
+        " document: http://javarouka.github.io/crosscutting.js\n" +
         " license: MIT\n" +
         " create date: <%= grunt.template.today('yyyy-mm-dd') %>\n" +
         "*/\n";
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
       all: {
         options: {
           urls: [
-            'http://localhost:8000/test/raop.html'
+            'http://localhost:8000/test/crosscutting.html'
           ]
         }
       }

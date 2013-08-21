@@ -1,8 +1,8 @@
 {
-  "name": "raop",
+  "name": "crosscutting",
   "version": "0.22.1",
-  "description": "RAOP.js is simple JavaScript library that provides an object-based AOP",
-  "main": "raop.js",
+  "description": "crosscutting.js is simple JavaScript library that provides an object-based AOP",
+  "main": "crosscutting.js",
   "dependencies": {
   },
   "devDependencies": {
@@ -14,7 +14,7 @@
     "grunt-contrib-watch": "*",
     "grunt-contrib-connect": "*"
   },
-  "repository": "https://github.com/javarouka/raop.js.git",
+  "repository": "https://github.com/javarouka/crosscutting.js.git",
   "author": "javarouka@gmail.com",
   "license": "MIT"
 }

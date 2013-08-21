@@ -4,10 +4,10 @@
  * Time: 오후 10:15
  */
 test('exists test', function() {
-  QUnit.notEqual(raop, null);
-  QUnit.equal(typeof raop.Aspect, 'object');
-  QUnit.equal(typeof raop.Aspect.weave, 'function');
-  QUnit.notEqual(typeof raop.Aspect.weave, 'object');
+  QUnit.notEqual(crosscutting, null);
+  QUnit.equal(typeof crosscutting.Aspect, 'object');
+  QUnit.equal(typeof crosscutting.Aspect.weave, 'function');
+  QUnit.notEqual(typeof crosscutting.Aspect.weave, 'object');
   ok(true, 'this had better work.');
 });
 
@@ -21,19 +21,19 @@ test('around test', function() {
     }
   };
 
-  raop.Aspect.weave(
+  crosscutting.Aspect.weave(
     obj,
-    new raop.Aspect.Pointcut(/a/),
-    raop.Aspect.AdviceType.AROUND,
+    new crosscutting.Aspect.Pointcut(/a/),
+    crosscutting.Aspect.AdviceType.AROUND,
     function(todo, options) {
       return todo();
     }
   );
 
-  raop.Aspect.weave(
+  crosscutting.Aspect.weave(
     obj,
-    new raop.Aspect.Pointcut(/b/),
-    raop.Aspect.AdviceType.AROUND,
+    new crosscutting.Aspect.Pointcut(/b/),
+    crosscutting.Aspect.AdviceType.AROUND,
     function(todo, options) {
       return todo(100) + 1;
     }
@@ -57,10 +57,10 @@ test("functional test", function() {
     }
   };
 
-  raop.Aspect.weave(
+  crosscutting.Aspect.weave(
     obj,
     /^(a+|c+)/,
-    raop.Aspect.AdviceType.BEFORE,
+    crosscutting.Aspect.AdviceType.BEFORE,
     function(options) {
       options.args[0] = 1000;
     }

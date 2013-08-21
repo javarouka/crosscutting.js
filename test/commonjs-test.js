@@ -3,17 +3,17 @@
  * Date: 13. 6. 28
  * Time: 오후 4:13
  */
-var raop = require("./../raop.js");
+var crosscutting = require("./../crosscutting.js");
 
 exports.testCheckExistProperties = function(test) {
-  test.ok(typeof raop.Aspect === 'object', "Aspect object exists");
+  test.ok(typeof crosscutting.Aspect === 'object', "Aspect object exists");
   test.ok(
-    typeof raop.before === 'function' &&
-      typeof raop.after === 'function' &&
-      typeof raop.around === 'function' &&
-      typeof raop.exception === 'function',
+    typeof crosscutting.before === 'function' &&
+      typeof crosscutting.after === 'function' &&
+      typeof crosscutting.around === 'function' &&
+      typeof crosscutting.exception === 'function',
     "Aspect weave method exists");
-  test.ok(typeof raop.Aspect.AdviceType === 'object', "Aspect AdviceType object exists");
+  test.ok(typeof crosscutting.Aspect.AdviceType === 'object', "Aspect AdviceType object exists");
   test.done();
 };
 
@@ -29,7 +29,7 @@ exports.addValidator = function(test) {
 
   var target = new Target("이항희");
 
-  raop.before(
+  crosscutting.before(
     target,
     true,
     function(options) {
@@ -61,7 +61,7 @@ exports.addValidator = function(test) {
     }
   };
 
-  raop.before(
+  crosscutting.before(
     calculator,
     function() {
       return true;
@@ -92,17 +92,17 @@ exports.testAroundType = function(test) {
     }
   };
 
-  raop.around(
+  crosscutting.around(
     obj,
-    new raop.Aspect.Pointcut(/a/),
+    new crosscutting.Aspect.Pointcut(/a/),
     function(todo/*, options*/) {
       return todo();
     }
   );
 
-  raop.around(
+  crosscutting.around(
     obj,
-    new raop.Aspect.Pointcut(/b/),
+    new crosscutting.Aspect.Pointcut(/b/),
     function(todo/*, options*/) {
       return todo(100) + 1;
     }
@@ -127,7 +127,7 @@ exports.testApplyAOPBasic = function(test) {
     }
   };
 
-  raop.before(
+  crosscutting.before(
     obj,
     /^(a+|c+)/,
     function(options) {
@@ -155,7 +155,7 @@ exports.t = function(test) {
   var logAdvice = function(options) {
     console.log("calc " + options.method + " execute");
   };
-  raop.before(
+  crosscutting.before(
     calculator,
     function() {
       return true;
@@ -190,7 +190,7 @@ exports.testException = function(test) {
     if(exception.stack) console.log(exception.stack);
   };
   // all method aop apply, type BEFORE
-  raop.exception(
+  crosscutting.exception(
     calculator,
     /^plus/,
     throwHandler
@@ -210,7 +210,7 @@ exports.testNewState = function(test) {
     }
   };
 
-  raop.before(
+  crosscutting.before(
     obj,
     function(value/*, target*/) {
       return !!value;

@@ -49,33 +49,33 @@
   };
 
   var root = context,
-    raop = Object.create(null);
+    crosscutting = Object.create(null);
 
-  var preventConflictName = root.raop;
+  var preventConflictName = root.crosscutting;
 
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = raop;
+      exports = module.exports = crosscutting;
     }
-    exports.raop = raop;
+    exports.crosscutting = crosscutting;
   }
   else {
-    root.raop = raop;
+    root.crosscutting = crosscutting;
   }
 
   var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
     checker = function(type) {
-      raop['is' + type] = function(obj) {
+      crosscutting['is' + type] = function(obj) {
         return toString.call(obj) === '[object ' + type + ']';
       };
     };
   for(var t = 0,len = types.length; t < len; t++) {
     checker(types[t]);
   }
-  raop.isArray = Array.isArray || function(obj) {
+  crosscutting.isArray = Array.isArray || function(obj) {
     return toString.call(obj) === '[object Array]';
   };
-  raop.isObject = function(obj) {
+  crosscutting.isObject = function(obj) {
     return obj === Object(obj);
   };
 
@@ -90,8 +90,8 @@
     Array.prototype
   ];
 
-  raop.noConflict = function() {
-    root.raop = preventConflictName;
+  crosscutting.noConflict = function() {
+    root.crosscutting = preventConflictName;
     return this;
   };
 
@@ -100,7 +100,7 @@
   var argumentsToArray = function(args){
     return aSlice.call(args);
   };
-  raop.argumentsToArray = argumentsToArray;
+  crosscutting.argumentsToArray = argumentsToArray;
 
   // Utils end ==========================================================
 
@@ -154,13 +154,13 @@
     this.matcher = matcher;
   };
   Pointcut.prototype.isMatch = function(value) {
-    if(raop.isBoolean(this.matcher)) {
+    if(crosscutting.isBoolean(this.matcher)) {
       return this.matcher;
     }
-    if(raop.isRegExp(this.matcher)) {
+    if(crosscutting.isRegExp(this.matcher)) {
       return this.matcher.test(value);
     }
-    else if(raop.isFunction(this.matcher)) {
+    else if(crosscutting.isFunction(this.matcher)) {
       return this.matcher(value);
     }
     else {
@@ -169,7 +169,7 @@
   };
 
   var Advice = function(action) {
-    action.$RAOP = {
+    action.$crosscutting = {
       wrap: true
     };
     return action;
@@ -192,7 +192,7 @@
 
   var weave = function(objs, pointcut, type, advice) {
 
-    if(!raop.isArray(objs)) {
+    if(!crosscutting.isArray(objs)) {
         objs = [objs];
     }
 
@@ -203,7 +203,7 @@
         }
       });
 
-      if(raop.isString(type)) {
+      if(crosscutting.isString(type)) {
         type = AdviceType[type.toUpperCase()];
       }
       var prop;
@@ -213,11 +213,11 @@
         //noinspection JSUnfilteredForInLoop
         prop = val;
 
-        if(!raop.isString(prop)) {
+        if(!crosscutting.isString(prop)) {
           continue;
         }
         var p = obj[prop];
-        if(raop.isFunction(p) && pointcut.isMatch(prop)) {
+        if(crosscutting.isFunction(p) && pointcut.isMatch(prop)) {
           obj[prop] = cut(obj, p, type, advice, prop);
         }
       }
@@ -225,47 +225,47 @@
     return this;
   };
 
-  raop.Aspect = {
+  crosscutting.Aspect = {
     Pointcut: Pointcut,
     Advice: Advice,
     weave: weave,
     AdviceType: AdviceType
   };
 
-  raop.before = function(obj, pointcut, advice) {
-    raop.weave(obj, pointcut, AdviceType.BEFORE, advice);
+  crosscutting.before = function(obj, pointcut, advice) {
+    crosscutting.weave(obj, pointcut, AdviceType.BEFORE, advice);
     return this;
   };
-  raop.after = function(obj, pointcut, advice) {
-    raop.weave(obj, pointcut, AdviceType.AFTER, advice);
+  crosscutting.after = function(obj, pointcut, advice) {
+    crosscutting.weave(obj, pointcut, AdviceType.AFTER, advice);
     return this;
   };
-  raop.around = function(obj, pointcut, advice) {
-    raop.weave(obj, pointcut, AdviceType.AROUND, advice);
+  crosscutting.around = function(obj, pointcut, advice) {
+    crosscutting.weave(obj, pointcut, AdviceType.AROUND, advice);
     return this;
   };
-  raop.exception = function(obj, pointcut, advice) {
-    raop.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
+  crosscutting.exception = function(obj, pointcut, advice) {
+    crosscutting.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
     return this;
   };
 
   // Argument Validation AOP
   weave(
-    raop.Aspect,
+    crosscutting.Aspect,
     new Pointcut(/^weave$/),
-    raop.Aspect.AdviceType.BEFORE,
+    crosscutting.Aspect.AdviceType.BEFORE,
     function(options) {
       if(!options.args || options.args.length < 3) {
         throw argumentError;
       }
-      if(!raop.isObject(options.args[0])) {
+      if(!crosscutting.isObject(options.args[0])) {
         throw argumentError;
       }
-      if(!raop.isFunction(options.advice)) {
+      if(!crosscutting.isFunction(options.advice)) {
         throw adviceFunctionInvalidError;
       }
 
-      if(!options.advice.$RAOP) {
+      if(!options.advice.$crosscutting) {
         options.advice = new Advice(options.advice);
       }
       // if second arguments is not Pointcut object, transform it.
@@ -275,10 +275,10 @@
     }
   );
 
-  raop.weave = raop.Aspect.weave;
+  crosscutting.weave = crosscutting.Aspect.weave;
 
   // Freeze. Only ES 5+
-  Object.freeze(raop);
+  Object.freeze(crosscutting);
 
   // AOP end =========================================================
 })(this);
