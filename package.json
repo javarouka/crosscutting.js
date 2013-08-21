@@ -1,6 +1,6 @@
 {
   "name": "crosscutting",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "description": "crosscutting.js is simple JavaScript library that provides an object-based AOP",
   "main": "crosscutting.js",
   "dependencies": {
