@@ -9,6 +9,17 @@ body {
     min-width: 320px;
     margin: 0 auto;
 }
+header .logo {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+header p {
+    clear: both;
+}
+header h1 {
+    padding-top: 15px;
+}
 header h2 {
     margin-top: 5px;
     font-size: 1.2em;
