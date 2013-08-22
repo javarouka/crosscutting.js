@@ -2,7 +2,9 @@
 
 body {
     font-family: 'Nanum Gothic', 'Gulim', serif;
-    color: #000000;
+    color: #34495e !important;
+    font-size: 0.8em;
+    text-rendering: optimizelegibility;
 }
 .inner {
     max-width: 1024px;
@@ -19,10 +21,10 @@ header p {
 }
 header h1 {
     padding-top: 15px;
+    font-size: 2.5em;
 }
 header h2 {
     margin-top: 5px;
-    font-size: 1.2em;
 }
 section {
     padding: 15px 20px;
@@ -57,20 +59,18 @@ code {
 }
 
 dl.arguments-desc {
-    font-size: 14px;
     padding: 5px 5px 5px 25px;
     background-color: #f2f2f2;
     border: solid 1px #ddd;
 }
 
 dl.arguments-desc dt {
-    font-size: 1.1em;
     font-weight: bold;
     text-decoration: underline;
     margin-top: 5px;
+    font-size: 1.2em;
 }
 dl.arguments-desc dd {
-    font-size: 1.0em;
     margin-bottom: 15px;
 }
 
@@ -97,7 +97,6 @@ dl.arguments-desc dd {
 .caution {
     font-weight: 600;
     padding: 5px 10px 5px 10px;
-    background-color: #f3dcbf;
 }
 .caution h1,
 .caution h2,
@@ -109,7 +108,6 @@ dl.arguments-desc dd {
 }
 
 .contributer {
-    font-size: 0.9em;
     padding: 10px 20px;
     overflow: hidden;
 }
@@ -121,6 +119,7 @@ footer {
 pre, code, pre span, code span, a {
     text-overflow: clip !important;
     word-wrap: break-word;
+    font-size: 1.1em;
     /*word-break: break-word !important;*/
 }
 
