@@ -69,15 +69,15 @@
                     사용법
                 </h1>
                 <h2>Basic</h2>
-                <h3>crosscutting.weave 메서드</h3>
+                <h3>crosscutting.weave</h3>
                 <p>
-                    객체(Object)와 관심(Aspect)을 특정 대상과 시점에 묶는 메서드입니다. 인자를 4개 받습니다.
+                    객체와 관심을 특정 대상과 시점에 묶는 메서드입니다. 인자를 4개 받습니다.
                 </p>
                 <pre><code class="javascript">crosscutting.weave([aopTarget], [pointcut], [adviceType], [advice])</code></pre>
 
                 <ul>
                     <li>
-                        <h4>aopTarget</h4>
+                        <h4>aopTarget - Object, Array[Object]</h4>
                         <p>
                             aop를 적용할 객체입니다. <em>빌트인 (Built-In) 타입</em>의 프로토타입은 AOP를 적용할 수 없으며 적용하려고 하면
                             <em>TypeError</em> 가 던져집니다.<br/>
@@ -98,7 +98,7 @@
                         </article>
                     </li>
                     <li>
-                        <h4>pointcut</h4>
+                        <h4>pointcut - RegExp, function(boolean 반환 필요)</h4>
                         <p>
                             aopTarget 에 적용될 메서드를 구별해내는 인자입니다.<br/>
                             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">
@@ -106,15 +106,15 @@
                             함수를 사용한다면 인자를 받는데, 다음과 같습니다. 포인트컷 함수는 반드시 <em>boolean</em> 값을 반환해야 합니다.<br/>
                             Boolean 값을 줄 경우 true면 모든 메서드에 대해 적용하게 됩니다.
                         </p>
-                        <pre><code class="javascript">fnPointcut([Method Name])</code></pre>
+                        <pre><code class="javascript">fnPointcut([Method Name]):boolean</code></pre>
 
                         <dl class="arguments-desc">
-                            <dt>Method Name</dt>
+                            <dt>Method Name  - String</dt>
                             <dd>객체의 메서드 이름입니다. 이것으로 AOP 적용 여부를 판단하는 함수 몸체를 만들면 됩니다.</dd>
                         </dl>
                     </li>
                     <li>
-                        <h4>adviceType</h4>
+                        <h4>adviceType - crosscutting.Aspect</h4>
                         <p>어드바이스 타이밍입니다. 4종류가 있습니다. <em>(crosscutting.Aspect.(BEFORE|AFTER|EXCEPTION|AROUND))</em> </p>
                         <dl class="arguments-desc">
                             <dt>crosscutting.Aspect.BEFORE</dt>
@@ -130,7 +130,7 @@
                         </dl>
                     </li>
                     <li>
-                        <h4>advice</h4>
+                        <h4>advice - function</h4>
                         <p>
                             어드바이스 함수입니다.<br/>
                             어드바이스 함수는 일반적으로 인자 객체를 인자로 전달 받습니다.
@@ -160,17 +160,17 @@ console.log(obj.echo("ok?")); // "yaho!";
 console.log(obj.echo("hello?")); // "yaho!";
 </code></pre>
                             </dd>
-                            <dt>target</dt>
+                            <dt>target - Object</dt>
                             <dd>AOP가 적용되는 객체입니다. 어드바이스는 이 객체를 컨텍스트(this)로 하여 실행됩니다.</dd>
-                            <dt>todo</dt>
+                            <dt>todo - function</dt>
                             <dd>실제 수행될 메서드입니다</dd>
-                            <dt>advice</dt>
+                            <dt>advice - function</dt>
                             <dd>weave 시 인자로 준 어드바이스 함수입니다.</dd>
-                            <dt>type</dt>
+                            <dt>type - crosscutting.Aspect</dt>
                             <dd>weave 시 인자로 준 어드바이스 타이밍입니다.</dd>
-                            <dt>method</dt>
+                            <dt>method - String</dt>
                             <dd>pointcut에 의해 join 된 메서드의 이름입니다.</dd>
-                            <dt>exception</dt>
+                            <dt>exception - Error</dt>
                             <dd>
                                 어드바이스 타입이 EXCEPTION이고 객체 메서드가 객체를 throw할 경우 객체 메서드에서 던져진 객체를 가지고 있습니다.
                             </dd>
