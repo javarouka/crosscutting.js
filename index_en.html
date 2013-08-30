@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <meta property="og:title" content="crosscutting that provides an object-based AOP is a simple JavaScript library. by javarouka"/>
+  <meta property="og:type" content="Article"/>
+  <meta property="og:site_name" content="CrossCutting.js"/>
+  <meta property="og:url" content="http://javarouka.github.io/crosscutting.js/"/>
+  <link rel="stylesheet" type="text/css" href="stylesheets/additional.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="javascripts/highlight.js/styles/tomorrow-night-bright.css">
+  <title>crosscutting.js by javarouka</title>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43258975-1', 'javarouka.github.io');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body>
+<a class="no-print" href="https://github.com/javarouka/crosscutting.js">
+  <img style="position: absolute; top: 0; left: 0; border: 0;"
+       src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"
+       alt="Fork me on GitHub">
+</a>
+<div id="container">
+<div class="inner">
+
+<header>
+  <img class="logo" src="images/scissors.jpg" >
+  <h1>crosscutting.js</h1>
+  <p>crosscutting that provides an object-based AOP is a simple JavaScript library.</p>
+</header>
+
+<section id="downloads" class="clearfix">
+  <a href="https://github.com/javarouka/crosscutting.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+  <a href="https://github.com/javarouka/crosscutting.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+  <a href="https://github.com/javarouka/crosscutting.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+</section>
+
+<hr>
+
+<article id="main_content">
+<section>
+  <h1 id="installation">
+    Installation
+  </h1>
+  <ul>
+    <li>
+      <h2>nodejs</h2>
+      <pre><code class="bash">$ npm install crosscutting</code></pre>
+    </li>
+    <li>
+      <h2>browser</h2>
+      <pre><code class="xml">&lt;script type="text/javascript" src="/path/to/crosscutting.min.js"&gt;&lt;/script&gt;</code></pre>
+    </li>
+  </ul>
+</section>
+<section>
+  <h1 id="usage">
+    How to use
+  </h1>
+  <h2>Basic</h2>
+  <h3>crosscutting.weave</h3>
+  <p>
+    Object (Object) and interests (Aspect) that bind to a specific target and the point method. Arguments is 4.
+  </p>
+  <pre><code class="javascript">crosscutting.weave([aopTarget], [pointcut], [adviceType], [advice])</code></pre>
+
+  <ul>
+    <li>
+      <h4>aopTarget - Object, Array[Object]</h4>
+      <p>
+        This arguments is the object which you apply AOP. <em>Built-In Type</em>prototype of the type can not be applied to the AOP <em>TypeError</em> is thrown when you try to apply<br/>
+        If you want to apply aop to multiple object, 배열로 줄 수도 있습니다.
+      </p>
+      <article class="caution">
+        <h5>적용 불가능한 객체들</h5>
+        <ul>
+          <li>String.prototype</li>
+          <li>Number.prototype</li>
+          <li>Boolean.prototype</li>
+          <li>Date.prototype</li>
+          <li>Array.prototype</li>
+          <li>Date.prototype</li>
+          <li>RegExp.prototype</li>
+          <li>Function.prototype</li>
+        </ul>
+      </article>
+    </li>
+    <li>
+      <h4>pointcut - RegExp, function(boolean 반환 필요)</h4>
+      <p>
+        aopTarget 에 적용될 메서드를 구별해내는 인자입니다.<br/>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">
+          정규표현식</a>, 함수, Boolean 값이 될 수 있습니다.
+        함수를 사용한다면 인자를 받는데, 다음과 같습니다. 포인트컷 함수는 반드시 <em>boolean</em> 값을 반환해야 합니다.<br/>
+        Boolean 값을 줄 경우 true면 모든 메서드에 대해 적용하게 됩니다.
+      </p>
+      <pre><code class="javascript">fnPointcut([Method Name]):boolean</code></pre>
+
+      <dl class="arguments-desc">
+        <dt>Method Name  - String</dt>
+        <dd>객체의 메서드 이름입니다. 이것으로 AOP 적용 여부를 판단하는 함수 몸체를 만들면 됩니다.</dd>
+      </dl>
+    </li>
+    <li>
+      <h4>adviceType - crosscutting.Aspect</h4>
+      <p>어드바이스 타이밍입니다. 4종류가 있습니다. <em>(crosscutting.Aspect.(BEFORE|AFTER|EXCEPTION|AROUND))</em> </p>
+      <dl class="arguments-desc">
+        <dt>crosscutting.Aspect.BEFORE</dt>
+        <dd>객체의 메소드가 실행되기 전 어드바이스가 실행됩니다.</dd>
+        <dt>crosscutting.Aspect.AFTER</dt>
+        <dd>객체의 메소드가 실행된 뒤 어드바이스가 실행됩니다.</dd>
+        <dt>crosscutting.Aspect.EXCEPTION</dt>
+        <dd>객체의 메소드가 무언가를 throw 하게 되면 실행됩니다.
+          당신은 어드바이스 함수에 전달되는 인자객체의 "exception" 속성을 사용하여 던져진 객체에 접근할 수 있습니다.</dd>
+        <dt>crosscutting.Aspect.AROUND</dt>
+        <dd>객체의 메소드가 실행되지 않고 어드바이스가 실행됩니다.
+          대신 객체의 메소드는 어드바이스 함수의 첫번째 인자로 전달됩니다. 일반적인 인자 객체는 두번째 인자로 전달됩니다.</dd>
+      </dl>
+    </li>
+    <li>
+      <h4>advice - function</h4>
+      <p>
+        어드바이스 함수입니다.<br/>
+        어드바이스 함수는 일반적으로 인자 객체를 인자로 전달 받습니다.
+        다만 어드바이스 타이밍이 <em>AROUND 일 경우 첫번째 인자로 객체 메소드가 오므로</em> 인자 객체는 두번째 인자가 됩니다.<br/>
+        인자 객체의 속성은 다음과 같습니다.
+      </p>
+      <dl class="arguments-desc">
+        <dt>args</dt>
+        <dd>객체 메서드에 전달되는 Arguments 객체입니다. 이 값을 조작하면 실제 객체 메서드의 인자도 바뀝니다. Arguments 객체에 대해서는
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments" target="_blank">MDN 문서</a>를 참고하세요
+                                <pre><code class="javascript">// Simple arguments control Example
+                                  var obj = {
+                                  // return argument received
+                                  echo: function(value) { return value; }
+                                  };
+                                  crosscutting.weave(
+                                  obj,
+                                  true,
+                                  crosscutting.Aspect.AdviceType.BEFORE,
+                                  function(options) {
+                                  // change first arguments.
+                                  options.args[0] = "yaho!";
+                                  }
+                                  );
+                                  // same result. "yaho!".
+                                  console.log(obj.echo("ok?")); // "yaho!";
+                                  console.log(obj.echo("hello?")); // "yaho!";
+                                </code></pre>
+        </dd>
+        <dt>target - Object</dt>
+        <dd>AOP가 적용되는 객체입니다. 어드바이스는 이 객체를 컨텍스트(this)로 하여 실행됩니다.</dd>
+        <dt>todo - function</dt>
+        <dd>실제 수행될 메서드입니다</dd>
+        <dt>advice - function</dt>
+        <dd>weave 시 인자로 준 어드바이스 함수입니다.</dd>
+        <dt>type - crosscutting.Aspect</dt>
+        <dd>weave 시 인자로 준 어드바이스 타이밍입니다.</dd>
+        <dt>method - String</dt>
+        <dd>pointcut에 의해 join 된 메서드의 이름입니다.</dd>
+        <dt>exception - Error</dt>
+        <dd>
+          어드바이스 타입이 EXCEPTION이고 객체 메서드가 객체를 throw할 경우 객체 메서드에서 던져진 객체를 가지고 있습니다.
+        </dd>
+      </dl>
+    </li>
+  </ul>
+  <h3>단축 메서드들</h3>
+  <p>AdviceType을 따로 인자로 주지 않고 축약한 단축 메서드로 쓸 수 있습니다</p>
+                <pre><code class="javascript">// same action
+                  crosscutting.before(
+                  { hello: function() {} },
+                  /hello/,
+                  function(){}
+                  );
+                  crosscutting.waeve(
+                  { hello: function() {} },
+                  /hello/,
+                  crosscutting.Aspect.BEFORE,
+                  function(){}
+                  );</code></pre>
+  <dl class="arguments-desc">
+    <dt>crosscutting.before</dt>
+    <dd>crosscutting.Aspect.BEFORE 동작과 같습니다</dd>
+    <dt>crosscutting.after</dt>
+    <dd>crosscutting.Aspect.AFTER 동작과 같습니다</dd>
+    <dt>crosscutting.around</dt>
+    <dd>crosscutting.Aspect.AROUND 동작과 같습니다</dd>
+    <dt>crosscutting.exception</dt>
+    <dd>crosscutting.Aspect.EXCEPTION 동작과 같습니다</dd>
+  </dl>
+</section>
+<section class="examples">
+  <h2>Example Codes</h2>
+  <h3 id="example0">예제에서 사용할 AOP를 적용할 객체입니다. 간단한 덧셈 뺄셈 프로그램입니다.</h3>
+          <pre><code class="javascript">// Simple Calculator
+            var calculator = {
+            plus: function(a, b) {
+            return a + b;
+            },
+            minus: function(a, b) {
+            return a - b;
+            }
+            };</code></pre>
+  <h4 id="example1">전달된 인자가 모두 숫자형인지 검사하는 AOP 적용(BEFORE 어드바이스) 예제</h4>
+  <p>숫자형이 아닐 경우 TypeError를 Throw 하도록 했습니다.</p>
+                <pre><code class="javascript">// Validator Advice
+                  var argumentCheck = function(options) {
+                  var args = options.args;
+                  for(var i = 0, len = args.length; i &lt; len; i++) {
+                  if(typeof args[i] !== 'number') {
+                  throw new TypeError("all arguments must be number type");
+                  }
+                  }
+                  };
+
+                  crosscutting.before(calculator, true, argumentCheck);
+
+                  // maybe throw TypeError.
+                  calculator.plus("one", "two");</code></pre>
+
+  <h4 id="example2">객체의 메서드가 실행될 때 로그를 찍는 BEFORE 어드바이스 예제</h4>
+  <p>메서드 실행 전 메서드의 이름과 함께 로그가 찍힐 것입니다.</p>
+                <pre><code class="javascript">var logAdvice = function(options) {
+                  console.log("method " + options.method + " execute");
+                  };
+
+                  // plus method aop apply, type BEFORE
+                  crosscutting.weave(
+                  calculator,
+                  function(name) {
+                  return name === "plus";
+                  },
+                  crosscutting.Aspect.AdviceType.BEFORE
+                  logAdvice
+                  );
+
+                  // console.log("method plus execute")
+                  var result = calculator.plus(1, 1);</code></pre>
+
+  <h4 id="example3">AROUND 어드바이스 예제</h4>
+  <p>타겟 메서드의 실행을 제어할 수 있고 결과의 조작도 할 수 있습니다. 이 예제에서는 calculator의 결과를 문자열로 변환하여 반환하겠습니다.</p>
+                <pre><code class="javascript">var stringify = function(todo, options) {
+                  var result = todo();
+                  return result + ""; // toString
+                  };
+
+                  crosscutting.around(calculator, true, logAdvice);
+
+                  // print console "string"
+                  console.log(typeof calculator.plus(1, 1));</code></pre>
+
+  <h4 id="example4">EXCEPTION 어드바이스 예제</h4>
+  <p>위에 나왔던 <a href="#example1">인자가 숫자인지 검증하는 AOP를 적용</a> 했다고 가정합니다. 이 예제에서는 일부러 오류를 내고 있습니다.</p>
+                <pre><code class="javascript">var throwHandler = function(options) {
+                  var exception = options.exception;
+                  console.log("Error! " + exception.name + ". cause : " + exception.message);
+                  if(exception.stack) console.log(exception.stack);
+                  };
+
+                  // aop apply, type EXCEPTION
+                  crosscutting.exception(calculator, /^plus/, throwHandler);
+
+                  // string arguments
+                  var result = calculator.plus("one", "two");
+                  /*
+                  Error: arguments must be number type
+                  at Object.calculator.plus ( ... )
+                  at ... some stacktrace ...
+                  */</code></pre>
+
+</section>
+<section class="contributer">
+  <h1>
+    <a name="contributer" class="anchor" href="#contributer"><span class="octicon octicon-link"></span></a>
+    Contributer
+  </h1>
+
+  <div id="gravata">
+    <a href="http://ko.gravatar.com/javarouka" target="_blank">
+      <img src="http://2.gravatar.com/avatar/ea49d570a6a8654adf6c0b8d90e51290?size=160"
+           alt="javarouka profile image">
+    </a>
+  </div>
+
+  <ul>
+    <li>
+      <span>Mail: </span>
+      <a href="mailto:javarouka@gmail.com">javarouka@gmail.com</a>
+    </li>
+    <li>
+      <span>Github: </span>
+      <a href="https://github.com/javarouka"
+         target="_blank">https://github.com/javarouka</a>
+    </li>
+    <li>
+      <span>Facebook: </span>
+      <a href="https://www.facebook.com/hanghui.i"
+         target="_blank">https://www.facebook.com/hanghui.i</a>
+    </li>
+    <li>
+      <span>Twitter: </span>
+      <a href="https://twitter.com/YiHanghee" target="_blank">@YiHanghee</a>
+    </li>
+  </ul>
+
+</section>
+
+</article>
+
+</div>
+</div>
+<script src="javascripts/highlight.js/highlight.pack.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
