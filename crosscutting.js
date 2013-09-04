@@ -3,18 +3,18 @@
   "use strict";
 
   var aSlice = [].slice,
-    ownKey = Object.prototype.hasOwnProperty,
-    toString = Object.prototype.toString,
+    ownKey = {}.hasOwnProperty,
+    toString = {}.toString,
     argumentError = new Error("argument is invalid"),
     cannotApplyBuiltInError = new TypeError("cannot apply aop on Built-in Type"),
     adviceFunctionInvalidError =
       new Error("advice function is invalid. It should be function type");
 
+  // polyfill
   Object.getPrototypeOf = Object.getPrototypeOf || function(obj) {
     return (obj.constructor) ? obj.constructor.prototype : {};
   };
 
-  // polyfill
   Object.freeze = Object.freeze || function(obj) {
     return obj;
   };
@@ -95,16 +95,14 @@
     return this;
   };
 
-  // Utils ==============================================================
+  // Utils
 
   var argumentsToArray = function(args){
     return aSlice.call(args);
   };
   crosscutting.argumentsToArray = argumentsToArray;
 
-  // Utils end ==========================================================
-
-  // AOP =========================================================
+  // AOP
 
   /**
    * options = {
@@ -280,5 +278,4 @@
   // Freeze. Only ES 5+
   Object.freeze(crosscutting);
 
-  // AOP end =========================================================
 })(this);

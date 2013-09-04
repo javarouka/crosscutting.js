@@ -153,8 +153,11 @@ exports.logTest = function(test) {
       return a - b;
     }
   };
+
+  var isLogging = false;
+
   var logAdvice = function(options) {
-    console.log("calc " + options.method + " execute");
+    isLogging = true;
   };
   crosscutting.before(
     calculator,
@@ -163,8 +166,9 @@ exports.logTest = function(test) {
     },
     logAdvice
   );
-  var result = calculator.plus(1, 1);
+  calculator.plus(1, 1);
 
+  test.ok(isLogging, "ok Logging!");
   test.done();
 };
 
@@ -187,8 +191,8 @@ exports.testException = function(test) {
   var exception = null;
   var throwHandler = function(options) {
     exception = options.exception;
-    console.log("Error! " + exception.name + ". cause : " + exception.message);
-    if(exception.stack) console.log(exception.stack);
+//    console.log("Error! " + exception.name + ". cause : " + exception.message);
+//    if(exception.stack) console.log(exception.stack);
   };
   // all method aop apply, type BEFORE
   crosscutting.exception(
