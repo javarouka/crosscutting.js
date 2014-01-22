@@ -10,20 +10,6 @@
     adviceFunctionInvalidError =
       new Error("advice function is invalid. It should be function type");
 
-  // polyfill
-  Object.getPrototypeOf = Object.getPrototypeOf || function(obj) {
-    return (obj.constructor) ? obj.constructor.prototype : {};
-  };
-
-  Object.freeze = Object.freeze || function(obj) {
-    return obj;
-  };
-
-  Object.create = Object.create || function(obj) {
-    var O = function(){};
-    O.prototype = obj;
-    return new O();
-  };
   Array.prototype.forEach = Array.prototype.forEach || function ( callback, thisArg ) {
     var T, k;
     if ( this == null ) {
@@ -48,20 +34,8 @@
     }
   };
 
-  var root = context,
-    crosscutting = Object.create(null);
-
-  var preventConflictName = root.crosscutting;
-
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = crosscutting;
-    }
-    exports.crosscutting = crosscutting;
-  }
-  else {
-    root.crosscutting = crosscutting;
-  }
+  var root = context || window || {},
+    crosscutting = {};
 
   var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
     checker = function(type) {
@@ -90,13 +64,7 @@
     Array.prototype
   ];
 
-  crosscutting.noConflict = function() {
-    root.crosscutting = preventConflictName;
-    return this;
-  };
-
   // Utils
-
   var argumentsToArray = function(args){
     return aSlice.call(args);
   };
@@ -206,11 +174,7 @@
       }
       var prop;
       for(var val in obj) {
-
-        //contain all properties in prototype-chain.
-        //noinspection JSUnfilteredForInLoop
         prop = val;
-
         if(!crosscutting.isString(prop)) {
           continue;
         }
@@ -275,7 +239,50 @@
 
   crosscutting.weave = crosscutting.Aspect.weave;
 
+  var hasModule = (typeof module !== 'undefined' && module.exports);
+  function makeGlobal(deprecate) {
+    var warned = false, local = crosscutting;
+    if (typeof ender !== 'undefined') {
+      return;
+    }
+    if (deprecate) {
+      context.crosscutting = function () {
+        if (!warned && context.console && context.console.warn) {
+          warned = true;
+          context.console.warn(
+            "Accessing Moment through the global scope is " +
+              "deprecated, and will be removed in an upcoming " +
+              "release.");
+        }
+        return local.apply(null, arguments);
+      };
+    }
+    else {
+      context.crosscutting = crosscutting;
+    }
+  }
+
+  if (hasModule) {
+    module.exports = crosscutting;
+    makeGlobal(true);
+  }
+  else if (typeof define === "function" && define.amd) {
+    define("moment", function (require, exports, module) {
+      if (module.config().noGlobal !== true) {
+        // If user provided noGlobal, he is aware of global
+        makeGlobal(module.config().noGlobal === undefined);
+      }
+
+      return moment;
+    });
+  }
+  else {
+    makeGlobal();
+  }
+
   // Freeze. Only ES 5+
-  Object.freeze(crosscutting);
+  if(Object.freeze) {
+    Object.freeze(crosscutting);
+  }
 
 })(this);
