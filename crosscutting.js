@@ -250,7 +250,7 @@
         if (!warned && context.console && context.console.warn) {
           warned = true;
           context.console.warn(
-            "Accessing Moment through the global scope is " +
+            "Accessing crosscutting through the global scope is " +
               "deprecated, and will be removed in an upcoming " +
               "release.");
         }
@@ -267,13 +267,11 @@
     makeGlobal(true);
   }
   else if (typeof define === "function" && define.amd) {
-    define("moment", function (require, exports, module) {
+    define("crosscutting", function (require, exports, module) {
       if (module.config().noGlobal !== true) {
-        // If user provided noGlobal, he is aware of global
         makeGlobal(module.config().noGlobal === undefined);
       }
-
-      return moment;
+      return crosscutting;
     });
   }
   else {
