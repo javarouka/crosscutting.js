@@ -1,4 +1,17 @@
-(function(context) {
+(function (factory) {
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  }
+  // CommonJS
+  else if (typeof exports === 'object') {
+    module.exports = factory();
+  }
+  // Browser
+  else {
+    window.crosscutting = factory();
+  }
+})(function() {
 
   "use strict";
 
@@ -34,8 +47,7 @@
     }
   };
 
-  var root = context || window || {},
-    crosscutting = {};
+  var crosscutting = {};
 
   var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
     checker = function(type) {
@@ -238,49 +250,11 @@
   );
 
   crosscutting.weave = crosscutting.Aspect.weave;
-
-  var hasModule = (typeof module !== 'undefined' && module.exports);
-  function makeGlobal(deprecate) {
-    var warned = false, local = crosscutting;
-    if (typeof ender !== 'undefined') {
-      return;
-    }
-    if (deprecate) {
-      context.crosscutting = function () {
-        if (!warned && context.console && context.console.warn) {
-          warned = true;
-          context.console.warn(
-            "Accessing crosscutting through the global scope is " +
-              "deprecated, and will be removed in an upcoming " +
-              "release.");
-        }
-        return local.apply(null, arguments);
-      };
-    }
-    else {
-      context.crosscutting = crosscutting;
-    }
-  }
-
-  if (hasModule) {
-    module.exports = crosscutting;
-    makeGlobal(true);
-  }
-  else if (typeof define === "function" && define.amd) {
-    define("crosscutting", function (require, exports, module) {
-      if (module.config().noGlobal !== true) {
-        makeGlobal(module.config().noGlobal === undefined);
-      }
-      return crosscutting;
-    });
-  }
-  else {
-    makeGlobal();
-  }
-
   // Freeze. Only ES 5+
   if(Object.freeze) {
     Object.freeze(crosscutting);
   }
 
-})(this);
+  return crosscutting;
+
+});
