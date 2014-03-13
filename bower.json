@@ -1,7 +1,7 @@
 {
   "name": "crosscutting.js",
   "main": "crosscutting.js",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "homepage": "https://github.com/javarouka/crosscutting.js",
   "authors": [
     "javarouka(이항희) <javarouka@coupang.com>"
