@@ -9,8 +9,8 @@ module.exports = function(grunt) {
       sources = [
         'crosscutting.js'
       ],
-      buildDirPath = "build/",
-      taskOrder = ['jshint', /*'connect'*/ 'nodeunit', /*'qunit'*/ 'uglify'],
+      buildDirPath = "./",
+      taskOrder = ['jshint', 'connect', 'nodeunit', 'qunit', 'uglify'],
       banner = "/*\n <%= pkg.name %>. AOP JavaScript Library\n" +
         " author: javarouka@gmail.com\n" +
         " document: http://javarouka.github.io/crosscutting.js\n" +
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
       all: {
         options: {
           urls: [
-            'http://localhost:8000/test/crosscutting.html'
+            'http://javarouka.coupang.com:9999/test/crosscutting.html'
           ]
         }
       }

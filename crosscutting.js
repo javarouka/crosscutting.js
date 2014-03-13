@@ -1,55 +1,16 @@
 (function (factory) {
-  // AMD
-  if (typeof define === 'function' && define.amd) {
-    define(factory);
-  }
-  // CommonJS
-  else if (typeof exports === 'object') {
-    module.exports = factory();
-  }
-  // Browser
-  else {
-    window.crosscutting = factory();
-  }
+  if (typeof define === 'function' && define.amd) { define(factory); }
+  else if (typeof exports === 'object') { module.exports = factory(); }
+  else { window['crosscutting'] = factory(); }
 })(function() {
-
   "use strict";
-
   var aSlice = [].slice,
-    ownKey = {}.hasOwnProperty,
     toString = {}.toString,
     argumentError = new Error("argument is invalid"),
     cannotApplyBuiltInError = new TypeError("cannot apply aop on Built-in Type"),
-    adviceFunctionInvalidError =
-      new Error("advice function is invalid. It should be function type");
-
-  Array.prototype.forEach = Array.prototype.forEach || function ( callback, thisArg ) {
-    var T, k;
-    if ( this == null ) {
-      throw new TypeError("this is null or not defined");
-    }
-    var O = Object(this);
-    var len = O.length >>> 0;
-    if (toString.call(callback) !== "[object Function]") {
-      throw new TypeError(callback + " is not a function");
-    }
-    if(thisArg) {
-      T = thisArg;
-    }
-    k = 0;
-    while(k < len) {
-      var kValue;
-      if (ownKey.call(O, k) ) {
-        kValue = O[k];
-        callback.call( T, kValue, k, O );
-      }
-      k++;
-    }
-  };
-
-  var crosscutting = {};
-
-  var types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
+    adviceFunctionInvalidError = new Error("advice function is invalid. It should be function type"),
+    crosscutting = {},
+    types = [ 'Function', 'Number', 'String', 'Date', 'RegExp', 'Boolean' ],
     checker = function(type) {
       crosscutting['is' + type] = function(obj) {
         return toString.call(obj) === '[object ' + type + ']';
@@ -66,23 +27,20 @@
   };
 
   var INGNORE_TYPES = [
-    Function.prototype,
-    Number.prototype,
-    String.prototype,
-    Date.prototype,
-    Boolean.prototype,
-    Object.prototype,
-    Date.prototype,
-    Array.prototype
-  ];
-
-  // Utils
-  var argumentsToArray = function(args){
-    return aSlice.call(args);
-  };
+      Function.prototype,
+      Number.prototype,
+      String.prototype,
+      Date.prototype,
+      Boolean.prototype,
+      Object.prototype,
+      Date.prototype,
+      Array.prototype
+    ],
+    INGNORE_TYPES_LEN = INGNORE_TYPES.length,
+    argumentsToArray = function(args){
+      return aSlice.call(args);
+    };
   crosscutting.argumentsToArray = argumentsToArray;
-
-  // AOP
 
   /**
    * options = {
@@ -131,6 +89,7 @@
   var Pointcut = function(matcher) {
     this.matcher = matcher;
   };
+
   Pointcut.prototype.isMatch = function(value) {
     if(crosscutting.isBoolean(this.matcher)) {
       return this.matcher;
@@ -151,9 +110,8 @@
       wrap: true
     };
     return action;
-  };
-
-  var cut = function(target, todo, type, advice, method) {
+  },
+  cut = function(target, todo, type, advice, method) {
     var f = function() {
       return type({
         args: arguments,
@@ -164,23 +122,21 @@
         method: method
       });
     };
-    f.name = method;
+    f['methodName'] = method;
     return f;
-  };
-
-  var weave = function(objs, pointcut, type, advice) {
-
+  },
+  weave = function(objs, pointcut, type, advice) {
+    var i, j, l, obj;
     if(!crosscutting.isArray(objs)) {
         objs = [objs];
     }
-
-    objs.forEach(function(obj) {
-      INGNORE_TYPES.forEach(function(ignore) {
-        if(ignore === obj) {
+    for(i = 0, l = objs.length; i < l; i++) {
+      obj = objs[i];
+      for(j = 0; j < INGNORE_TYPES_LEN; j++) {
+        if(INGNORE_TYPES[j] === obj) {
           throw cannotApplyBuiltInError;
         }
-      });
-
+      }
       if(crosscutting.isString(type)) {
         type = AdviceType[type.toUpperCase()];
       }
@@ -195,7 +151,7 @@
           obj[prop] = cut(obj, p, type, advice, prop);
         }
       }
-    });
+    }
     return this;
   };
 
@@ -223,7 +179,6 @@
     return this;
   };
 
-  // Argument Validation AOP
   weave(
     crosscutting.Aspect,
     new Pointcut(/^weave$/),
@@ -242,19 +197,11 @@
       if(!options.advice.$crosscutting) {
         options.advice = new Advice(options.advice);
       }
-      // if second arguments is not Pointcut object, transform it.
       if(!(options.args[1] instanceof Pointcut)) {
         options.args[1] = new Pointcut(options.args[1]);
       }
     }
   );
-
   crosscutting.weave = crosscutting.Aspect.weave;
-  // Freeze. Only ES 5+
-  if(Object.freeze) {
-    Object.freeze(crosscutting);
-  }
-
   return crosscutting;
-
 });
