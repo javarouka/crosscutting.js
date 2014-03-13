@@ -231,3 +231,15 @@ exports.testNewState = function(test) {
 
 };
 
+exports.testOneFunction = function(test) {
+  var a = 1;
+  function T() {
+    a++;
+  }
+  crosscutting.before(T, function A() {
+    a++;
+  });
+  T();
+  test.ok(a == 3, "simple function");
+  test.done();
+};

@@ -1,7 +1,7 @@
 (function (factory) {
   if (typeof define === 'function' && define.amd) { define(factory); }
   else if (typeof exports === 'object') { module.exports = factory(); }
-  else { window['crosscutting'] = factory(); }
+  else { window.crosscutting = factory(); }
 })(function() {
   "use strict";
   var aSlice = [].slice,
@@ -53,17 +53,17 @@
    * }
    */
   var AdviceType = {
-    "BEFORE": function(options) {
+    "BEFORE": function BEFORE(options) {
       var aValue = options.advice.call(options.target, options);
       var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
       return aValue || rValue;
     },
-    "AFTER": function(options) {
+    "AFTER": function AFTER(options) {
       var rValue = options.todo.apply(options.target, argumentsToArray(options.args));
       var aValue = options.advice.call(options.target, options);
       return aValue || rValue;
     },
-    "AROUND": function(options) {
+    "AROUND": function AROUND(options) {
       return options.advice.call(
         options.target,
         function() {
@@ -75,7 +75,7 @@
         options
       );
     },
-    "EXCEPTION": function(options) {
+    "EXCEPTION": function EXCEPTION(options) {
       try {
         return options.todo.apply(options.target, argumentsToArray(options.args));
       }
@@ -122,7 +122,7 @@
         method: method
       });
     };
-    f['methodName'] = method;
+    f.methodName = method;
     return f;
   },
   weave = function(objs, pointcut, type, advice) {
@@ -163,20 +163,16 @@
   };
 
   crosscutting.before = function(obj, pointcut, advice) {
-    crosscutting.weave(obj, pointcut, AdviceType.BEFORE, advice);
-    return this;
+    return crosscutting.weave(obj, pointcut, AdviceType.BEFORE, advice);
   };
   crosscutting.after = function(obj, pointcut, advice) {
-    crosscutting.weave(obj, pointcut, AdviceType.AFTER, advice);
-    return this;
+    return crosscutting.weave(obj, pointcut, AdviceType.AFTER, advice);
   };
   crosscutting.around = function(obj, pointcut, advice) {
-    crosscutting.weave(obj, pointcut, AdviceType.AROUND, advice);
-    return this;
+    return crosscutting.weave(obj, pointcut, AdviceType.AROUND, advice);
   };
   crosscutting.exception = function(obj, pointcut, advice) {
-    crosscutting.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
-    return this;
+    return crosscutting.weave(obj, pointcut, AdviceType.EXCEPTION, advice);
   };
 
   weave(
@@ -186,6 +182,9 @@
     function(options) {
       if(!options.args || options.args.length < 3) {
         throw argumentError;
+      }
+      if(crosscutting.isFunction(options.args[0])) {
+        options.args[0] = cut(null, options.args[0], options.args[2], options.args[1], options.args[0]);
       }
       if(!crosscutting.isObject(options.args[0])) {
         throw argumentError;
